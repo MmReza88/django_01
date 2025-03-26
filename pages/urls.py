@@ -1,10 +1,6 @@
-from django.urls import path 
-from .  import views
+from django.urls import path, re_path
+from django.views.static import serve
 
 urlpatterns = [
-
-    path("",views.home_page_view.as_view(), name='path_home_page'),
     
-    path("sub_01/",views.sub_01_page_view.as_view(), name='path_sub_01_page'),
-   
-    ]
+]

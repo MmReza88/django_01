@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path, re_path
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('pages.urls')),
-]
+    path('api/', include('pages.urls')),
+    re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0] + "/flutter"}),
+] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
