@@ -5,10 +5,14 @@ from django.views.generic import TemplateView
 
 
 class home_page_view (TemplateView):
-   template_name = "pages/home_page.html"
+   template_name = "flutter/index.html"
    
 
 
 class sub_01_page_view (TemplateView):
+   template_name = "pages/sub_01_page.html"
+   
+
+class admin_page_view (TemplateView):
    template_name = "pages/sub_01_page.html"
    
