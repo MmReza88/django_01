@@ -1,6 +1,7 @@
-from django.urls import path, re_path
-from django.views.static import serve
+from django.urls import path
+from .views import hello_api
+
 
 urlpatterns = [
-    
+    path('', hello_api, name='hello_api'),
 ]
