@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import hello_api
+from .views import get_totem_infos
 
 
 urlpatterns = [
-    path('', hello_api, name='hello_api'),
+    path('totem/<int:totem_id>', get_totem_infos, name='get_totem_infos'),
 ]
