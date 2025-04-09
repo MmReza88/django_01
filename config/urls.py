@@ -23,7 +23,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api', include('pages.urls')),
-    path('auth', include('park_auth.urls')),
-    re_path(r'^(?!api|auth)(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0] + "/flutter"}),
+    path('api/', include('pages.urls')),
+    path('auth/', include('park_auth.urls')),
+    re_path(r'^(?!api/|auth/)(?P<path>.*)$', serve, {'document_root': settings.STATICFILES_DIRS[0] + "/flutter"}),
 ] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
