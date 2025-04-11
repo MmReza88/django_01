@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     
     'rest_framework',
     "corsheaders",
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+# WSGI_APPLICATION = 'django_01.wsgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 
 # Database
