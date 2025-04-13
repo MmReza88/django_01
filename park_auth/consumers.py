@@ -2,7 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
 class MessageConsumer(AsyncWebsocketConsumer):
-    client_id = None  # Store the client ID here
+    client_id = None
 
     async def connect(self):
         await self.accept()
