@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-n091ny7mzrc8fwt48c&jf1fsf0$-j7dzahqz%khmq9_pr@d)$^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['localhost', '192.168.1.65', '.local']  
 
 
 # Application definition
@@ -50,6 +51,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,6 +142,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static'),
     os.path.join(BASE_DIR,'park_auth/static')
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Folder where everything gets collected
+# WhiteNoise setting (optional, but recommended)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

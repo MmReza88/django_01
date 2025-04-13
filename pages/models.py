@@ -20,7 +20,6 @@ class Totem(models.Model):
         return [int(x) for x in self.durations.split(",")] if self.durations else []
     
     def get_prices(self):
-        print(self.prices.split(","))
         return [int(x) for x in self.prices.split(",")] if self.prices else []
     
     def __str__(self):

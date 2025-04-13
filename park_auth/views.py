@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import JsonResponse
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
-
-def lin(request):
-    
+def lin(request, client_id):    
     if request.user.is_authenticated:
-        return redirect('success')
+        return redirect(reverse('success', args=[client_id]))
     
     if request.method == 'POST':
         username = request.POST["username"]
@@ -17,33 +18,44 @@ def lin(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('success')
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                client_id,
+                {
+                    "type": "send_login",  # this matches a method name in your consumer
+                    "username": request.user.username,
+                }
+            )
+            return redirect(reverse('success', args=[client_id]))
         else:
             messages.info(request, "Identifiant ou mdp incorrect")
     
     form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-def success(request):
-    return render(request, 'success.html')
+def success(request, client_id):
+    return render(request, 'success.html', {'c_id': client_id})
 
-def lout(request):
+def lout(request, client_id):
     logout(request)
-    return redirect('login')
+    # send logged out to client
+    return redirect(reverse('success', args=[client_id]))
 
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 
-def your_view(request):
-    # Logic here
 
-    # Send message to the group
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        "messages",
-        {
-            "type": "send_message",
-            "message": "Hello from Django view!",
-        }
-    )
-    return JsonResponse({"status": "Message sent"})
+# def your_view(request):
+#     # 🔒 Hardcoded client ID and message
+#     user_id = "client123"
+#     message = "Hello, this is a message from Django view!"
+
+#     channel_layer = get_channel_layer()
+
+#     async_to_sync(channel_layer.group_send)(
+#         user_id,
+#         {
+#             "type": "send_message",  # this matches a method name in your consumer
+#             "message": message,
+#         }
+#     )
+
+#     return JsonResponse({"status": f"Message sent to {user_id}"})
