@@ -8,7 +8,18 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 def lin(request, client_id):    
+    def send_uname():
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            client_id,
+            {
+                "type": "send_login",  # this matches a method name in your consumer
+                "username": request.user.username,
+            }
+        )
+    
     if request.user.is_authenticated:
+        send_uname()
         return redirect(reverse('success', args=[client_id]))
     
     if request.method == 'POST':
@@ -18,14 +29,7 @@ def lin(request, client_id):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                client_id,
-                {
-                    "type": "send_login",  # this matches a method name in your consumer
-                    "username": request.user.username,
-                }
-            )
+            send_uname()
             return redirect(reverse('success', args=[client_id]))
         else:
             messages.info(request, "Identifiant ou mdp incorrect")

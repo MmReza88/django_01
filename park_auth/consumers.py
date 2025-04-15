@@ -12,14 +12,10 @@ class MessageConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_discard(self.client_id, self.channel_name)
 
     async def receive(self, text_data):
-        print("received a message")
         data = json.loads(text_data)
         
-        if "client_id" in data:
-            print("received a client_id")
-            
+        if "client_id" in data:            
             self.client_id = data["client_id"]
-
             # Add this socket to a group named with the ID
             await self.channel_layer.group_add(self.client_id, self.channel_name)
 
