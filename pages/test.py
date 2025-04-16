@@ -11,3 +11,4 @@ class SimpleTest (SimpleTestCase):
         response = self.client.get('/sub_01/')
         self.assertEqual(response.status_code,200)
 
+
