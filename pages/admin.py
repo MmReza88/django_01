@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Service_provider , City , Totem, Ticket, User_developed, Car, Fine, Chalk
+from .models import Service_provider , City ,Zone , Parking , Totem, Ticket, User_developed, Car, Fine, Chalk
 
-
+"""
 class Service_providerAdmin(admin.ModelAdmin):
     list_display = ['name']
 class CityAdmin (admin.ModelAdmin):
@@ -25,15 +25,19 @@ class FineAdmin (admin.ModelAdmin) :
     
 class ChalkAdmin (admin.ModelAdmin):
     list_display = ['plate_number' , 'issued_time' ]
-
+"""
 # Register your models here.
-admin.site.register(Service_provider,Service_providerAdmin)
-admin.site.register(City,CityAdmin)
-admin.site.register(Totem,TotemAdmin)
-admin.site.register(Ticket,TicketAdmin)
+admin.site.register(Service_provider)#Service_providerAdmin)
+admin.site.register(City)#,CityAdmin)
+admin.site.register(Zone)#,CityAdmin)
+admin.site.register(Parking)#,CityAdmin)
+admin.site.register(Totem)#,TotemAdmin)
+admin.site.register(Ticket)#,TicketAdmin)
 
-admin.site.register(User_developed,User_developedAdmin)
-admin.site.register(Car,CarAdmin)
-admin.site.register(Fine,FineAdmin)
-admin.site.register(Chalk,ChalkAdmin)
+
+
+admin.site.register(User_developed)#,User_developedAdmin)
+admin.site.register(Car)#,CarAdmin)
+admin.site.register(Fine)#,FineAdmin)
+admin.site.register(Chalk)#,ChalkAdmin)
 
