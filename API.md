@@ -2,7 +2,7 @@
 
 ## TOTEM flutter app 
 ### request :
-    http://127.0.0.1:8000/totem/totem_123/
+    http://127.0.0.1:8000/totem/totem_xxx/
 ### get_totem_infos(totem_id)
 totem_id : String under the form `totem_XXX` where XXX is the id in the database of the totem.
 
