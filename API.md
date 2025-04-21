@@ -1,7 +1,9 @@
 # API Documentation
 
 ## TOTEM flutter app 
-
+### request :
+    http://127.0.0.1:8000/api/totem/totem_xxx/
+    e.g. : http://127.0.0.1:8000/api/totem/totem_321/
 ### get_totem_infos(totem_id)
 totem_id : String under the form `totem_XXX` where XXX is the id in the database of the totem.
 
@@ -14,6 +16,9 @@ Return exemple JSON object:
 }
 ```
 
+### request :
+    http://127.0.0.1:8000/api/user/cars/username/
+    e.g. http://127.0.0.1:8000/api/user/cars/Eric/
 ### get_user_cars(username)
 username: unique username of a user in the Users table.
 
@@ -52,4 +57,15 @@ Return JSON object:
 ```
 The time left is positive or 0 if the parking is not valid. and is the amount of minutes left. You will most likely have to look in the Tickets table to find the last one.
 
-### get_car_parking_status(plate)
+### pay_ticket(ticket_id)
+ticket_id: id of the ticket which is paid for.
+
+Mark the ticket as paid.
+
+Return JSON objectabout the status:
+```json
+{
+    "status": "success"
+}
+```
+"success" or "failed" are the two only values possible.
