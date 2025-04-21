@@ -3,7 +3,7 @@
 ## TOTEM flutter app 
 ### request :
     http://127.0.0.1:8000/api/totem/totem_xxx/
-    e.g : http://127.0.0.1:8000/api/totem/totem_321/
+    e.g. : http://127.0.0.1:8000/api/totem/totem_321/
 ### get_totem_infos(totem_id)
 totem_id : String under the form `totem_XXX` where XXX is the id in the database of the totem.
 
@@ -18,7 +18,7 @@ Return exemple JSON object:
 
 ### request :
     http://127.0.0.1:8000/api/user/cars/username/
-    http://127.0.0.1:8000/api/user/cars/Eric/
+    e.g. http://127.0.0.1:8000/api/user/cars/Eric/
 ### get_user_cars(username)
 username: unique username of a user in the Users table.
 
