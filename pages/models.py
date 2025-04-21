@@ -84,7 +84,6 @@ class Ticket(models.Model):
     payment_done = models.BooleanField(default=False)
     def __str__(self): 
         return f"Ticket #{str(self.totem.identity_code)} - {self.car} (Duration: {self.duration} mins)" 
-
 class Chalk(models.Model):
    
     #user is controler
