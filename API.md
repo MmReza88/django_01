@@ -52,4 +52,15 @@ Return JSON object:
 ```
 The time left is positive or 0 if the parking is not valid. and is the amount of minutes left. You will most likely have to look in the Tickets table to find the last one.
 
-### get_car_parking_status(plate)
+### pay_ticket(ticket_id)
+ticket_id: id of the ticket which is paid for.
+
+Mark the ticket as paid.
+
+Return JSON objectabout the status:
+```json
+{
+    "status": "success"
+}
+```
+"success" or "failed" are the two only values possible.
