@@ -31,8 +31,9 @@ Exemple JSON object:
 }
 ```
 
-### new_ticket(duration, totem_id, plate)
+### new_ticket(duration , price , totem_id , plate)
 duration : int in minutes of the duration of the ticket
+price : real in euro of the price of the ticket
 totem_id : String under the form `totem_XXX` where XXX is the id in the database of the totem.
 plate: Str of the plate of a car
 
