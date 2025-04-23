@@ -2,8 +2,13 @@
 #from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-from .models import Totem,User_developed,Car
+from django.views.decorators.http import require_POST
+from .models import Totem,User_developed,Car,Ticket
 from django.contrib.auth.models import User 
+import json
+from django.db import transaction
+
+
 @require_GET
 def get_totem_infos(request, totem_id):
     try:
@@ -52,3 +57,99 @@ def get_user_cars(request, username):
         return JsonResponse({"error": "User profile not found"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+    
+
+
+#--------------------------------------------------------------------------------------------------
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import IntegrityError
+
+def new_ticket(duration, price, totem_id, plate):
+    try:
+        totem_pk = int(totem_id.split('_')[1])
+        
+        totem = Totem.objects.get(identity_code=totem_pk)
+        
+        car, created = Car.objects.get_or_create(plate_number=plate.upper())
+                    
+        ticket = Ticket.objects.create(
+            duration=duration,
+            price=price,
+            totem=totem,
+            car=car,
+            payment_done=False
+        )
+        print("Ticket created successfully")
+        print(ticket.pk)
+        return JsonResponse({"status": "success"})
+    
+    
+    except (ValidationError, ValueError, IndexError):
+        print("Invalid input data")
+        return JsonResponse({"status": "failed"}, status=400)
+
+    except ObjectDoesNotExist:
+        print("Totem or car not found")
+        return JsonResponse({"status": "failed"}, status=404)
+
+    except IntegrityError:
+        print("Integrity error: possible duplicate entry")
+        return JsonResponse({"status": "failed"}, status=500)
+
+    except Exception:
+        print("An unexpected error occurred")
+        return JsonResponse({"status": "failed"}, status=500)
+    
+
+#--------------------------------------------------------------------------------------------------
+
+from django.utils import timezone
+from .models import Ticket
+
+def get_car_parking_status(plate):
+    try:
+        
+        car= Car.objects.get(plate_number=plate.upper())
+
+        # Get the most recent valid ticket for this car
+        latest_ticket = Ticket.objects.filter(
+            car=car,
+            payment_done=True,
+
+        ).order_by('-start_time').first()
+
+        if latest_ticket:
+            # Calculate minutes remaining
+            expiration_time = latest_ticket.start_time + timezone.timedelta(minutes=latest_ticket.duration)
+            time_left = max(0, (expiration_time - timezone.now()).total_seconds() // 60)
+            print(int(time_left))
+            print("ticket found")
+            return JsonResponse({"time_left": int(time_left)})
+        
+        else:
+            print("No ticket found")
+            return JsonResponse({"time_left": 0})
+
+    except Exception:
+        print("Handle any unexpected errors")
+        return JsonResponse({"time_left": 0})
+    
+
+#--------------------------------------------------------------------------------------------------
+def pay_ticket(ticket_id):
+    try:
+        ticket = Ticket.objects.get(id=ticket_id)
+        
+        ticket.payment_done = True
+        ticket.save()
+        print("Ticket payment updated successfully")
+        return JsonResponse({"status": "success"})
+    
+    except Ticket.DoesNotExist:
+        print("Ticket not found")
+        return JsonResponse({"status": "failed"})
+    
+    except Exception:
+        print("An unexpected error occurred")
+        return JsonResponse({"status": "failed"})

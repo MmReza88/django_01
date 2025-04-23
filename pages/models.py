@@ -80,7 +80,7 @@ class Ticket(models.Model):
     car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
  
     duration = models.IntegerField(blank=False, null=True)
-    price = models.IntegerField(blank=False, null=True)
+    price = models.FloatField(blank=False, null=True)
     payment_done = models.BooleanField(default=False)
     def __str__(self): 
         return f"Ticket #{str(self.totem.identity_code)} - {self.car} (Duration: {self.duration} mins)" 
