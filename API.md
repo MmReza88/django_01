@@ -8,7 +8,8 @@
 totem_id : String under the form `totem_XXX` where XXX is the id in the database of the totem.
 
 Return exemple JSON object:
-```json
+```json        return {"type": "error", "error": "Invalid totem_id format."}
+
 {
     "parking_name": "Parco Pipo",
     "durations": [0, 10, 60, 120],
