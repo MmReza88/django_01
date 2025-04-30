@@ -1,6 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-import api_functions
+from . import api_functions
 
 #-------------------------------------------------------------------------------------
 
@@ -56,10 +56,11 @@ class MessageConsumer(AsyncWebsocketConsumer):
                 "type": "error",
                 "error": "Invalid request type."
             }
-        await self.send(text_data=json.dumps(response_data))
+            await self.send(text_data=json.dumps(response_data))
     
     
     async def send_login(self, event):
+        print("heeeo")
         await self.send(text_data=json.dumps({
             "type": "login",
             "username": event["username"]

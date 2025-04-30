@@ -1,6 +1,7 @@
 
-from pages.models import Totem,User, User_developed, Car, Totem, Ticket
 from channels.db import database_sync_to_async
+from django.utils import timezone
+
 
 @database_sync_to_async
 
@@ -32,7 +33,7 @@ def get_totem_infos(totem_id):
 #-----------------------------------------------------------------------------------
 
 def get_user_cars(username):
-    from pages.models import Car
+    from pages.models import Car, User_developed, User
 
     try:
         user = User.objects.get(username=username)
@@ -99,11 +100,9 @@ def new_ticket(duration, price, totem_id, plate):
 
 #--------------------------------------------------------------------------------------------------
 
-from django.utils import timezone
-from .models import Ticket
 
 def get_car_parking_status(plate):
-    from pages.models import Ticket
+    from pages.models import Ticket, Car
 
     try:
         
