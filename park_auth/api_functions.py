@@ -1,7 +1,8 @@
 
 from pages.models import Totem,User, User_developed, Car, Totem, Ticket
+from channels.db import database_sync_to_async
 
-#@database_sync_to_async
+@database_sync_to_async
 
 def get_totem_infos(totem_id):
     try:
