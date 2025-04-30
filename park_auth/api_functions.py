@@ -113,16 +113,22 @@ def get_car_parking_status(plate):
             expiration_time = latest_ticket.start_time + timezone.timedelta(minutes=latest_ticket.duration)
             time_left = max(0, (expiration_time - timezone.now()).total_seconds() // 60)
             print(int(time_left))
-            print("ticket found")
-            return JsonResponse({"time_left": int(time_left)})
+
+            print("ticket found")     
+            return ({
+                "type": "get_car_parcking_status",
+                "time_left": str(int(time_left))
+            })
         
         else:
-            print("No ticket found")
-            return JsonResponse({"time_left": 0})
+            return ({
+                "type": "get_car_parcking_status",
+                "time_left": "0"
+            })
 
-    except Exception:
+    except Exception as e:
         print("Handle any unexpected errors")
-        return JsonResponse({"time_left": 0})
+        return {"type": "error", "error": f"Server error: {str(e)}"}
     
 
 #--------------------------------------------------------------------------------------------------
@@ -133,12 +139,19 @@ def pay_ticket(ticket_id):
         ticket.payment_done = True
         ticket.save()
         print("Ticket payment updated successfully")
-        return JsonResponse({"status": "success"})
-    
+        return ({
+            "type": "pay_ticket",
+            "status": "success",
+        })
+
     except Ticket.DoesNotExist:
         print("Ticket not found")
-        return JsonResponse({"status": "failed"})
+        return ({
+            "type": "pay_ticket",
+            "status": "failed",
+        })
     
-    except Exception:
-        print("An unexpected error occurred")
-        return JsonResponse({"status": "failed"})
+    except Exception as e:
+        print("Handle any unexpected errors")
+        return {"type": "error", "error": f"Server error: {str(e)}"}
+    

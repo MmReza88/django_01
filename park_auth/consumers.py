@@ -6,9 +6,6 @@ import api_functions
 #-------------------------------------------------------------------------------------
 
 
-
-
-
 class MessageConsumer(AsyncWebsocketConsumer):
     client_id = None
     client_username = None
