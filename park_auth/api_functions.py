@@ -5,6 +5,8 @@ from channels.db import database_sync_to_async
 @database_sync_to_async
 
 def get_totem_infos(totem_id):
+    from pages.models import Totem
+
     try:
         numeric_id = totem_id.split('_')[1]
         totem = Totem.objects.select_related("parking__zone").get(identity_code=numeric_id)
@@ -30,7 +32,8 @@ def get_totem_infos(totem_id):
 #-----------------------------------------------------------------------------------
 
 def get_user_cars(username):
-    
+    from pages.models import Car
+
     try:
         user = User.objects.get(username=username)
         
@@ -57,6 +60,8 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import IntegrityError
 
 def new_ticket(duration, price, totem_id, plate):
+    from pages.models import Totem, Car, Totem, Ticket
+
     try:
         totem_pk = int(totem_id.split('_')[1])
         
@@ -98,6 +103,8 @@ from django.utils import timezone
 from .models import Ticket
 
 def get_car_parking_status(plate):
+    from pages.models import Ticket
+
     try:
         
         car= Car.objects.get(plate_number=plate.upper())
@@ -134,6 +141,8 @@ def get_car_parking_status(plate):
 
 #--------------------------------------------------------------------------------------------------
 def pay_ticket(ticket_id):
+    from pages.models import  Ticket
+
     try:
         ticket = Ticket.objects.get(id=ticket_id)
         
