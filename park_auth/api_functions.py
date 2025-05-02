@@ -4,7 +4,6 @@ from django.utils import timezone
 
 
 @database_sync_to_async
-
 def get_totem_infos(totem_id):
     from pages.models import Totem
 
@@ -31,7 +30,7 @@ def get_totem_infos(totem_id):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 #
 #-----------------------------------------------------------------------------------
-
+@database_sync_to_async
 def get_user_cars(username):
     from pages.models import Car, User_developed, User
 
