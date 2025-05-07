@@ -44,6 +44,7 @@ class Parking (models.Model):
 
 class Totem(models.Model):
     identity_code = models.IntegerField(unique=True ,null=True,blank=False) # if this should be required
+    secret_token  = models.CharField(max_length=64, null= True ,unique=True, blank=False)  # Unique token for each totem
     parking = models.ForeignKey(
         Parking, 
         on_delete=models.PROTECT,  # Better than DO_NOTHING
