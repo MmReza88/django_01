@@ -3,14 +3,14 @@ from rest_framework.decorators import api_view
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import park_auth.api_functions as api
-from views import Totem
+from pages import views 
 @api_view(['GET']) 
 def start_card(request, totem_id, secret_token, card_info):
     
     #TODO: Check it the secret_token is valid for the totem_id
     try:
         numeric_id = totem_id.split('_')[1]
-        totem = Totem.objects.select_related("parking__zone").get(identity_code=numeric_id)
+        totem = views.Totem.objects.select_related("parking__zone").get(identity_code=numeric_id)
         if totem.secret_token != secret_token:
             return Response({"type": "error", "error": "Invalid secret token."})
         channel_layer = get_channel_layer()

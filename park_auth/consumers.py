@@ -31,21 +31,21 @@ class MessageConsumer(AsyncWebsocketConsumer):
             username = data["username"]
             response_data = await api_functions.get_user_cars(username)
             await self.send(text_data=json.dumps(response_data))
-        # elif data["type"] == "create_new_ticket":
-        #     duration = data["duration"]
-        #     price = data["price"]
-        #     totem_id = data["totem_id"]     
-        #     plate = data["plate"]
-        #     response_data = await api_functions.new_ticket(duration, price, totem_id, plate)
-        #     await self.send(text_data=json.dumps(response_data))
-        # elif data["type"] == "get_car_parcking_status":
-        #     plate = data["plate"]
-        #     response_data = await api_functions.get_car_parking_status(plate)
-        #     await self.send(text_data=json.dumps(response_data))
-        # elif data["type"] == "pay_ticket":
-        #     ticket_id = data["ticket_id"]
-        #     response_data = await api_functions.pay_ticket(ticket_id)
-        #     await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "create_new_ticket":
+            duration = data["duration"]
+            price = data["price"]
+            totem_id = data["totem_id"]     
+            plate = data["plate"]
+            response_data = await api_functions.new_ticket(duration, price, totem_id, plate)
+            await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "get_car_parcking_status":
+            plate = data["plate"]
+            response_data = await api_functions.get_car_parking_status(plate)
+            await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "pay_ticket":
+            ticket_id = data["ticket_id"]
+            response_data = await api_functions.pay_ticket(ticket_id)
+            await self.send(text_data=json.dumps(response_data))
 
         else:
             response_data = {
