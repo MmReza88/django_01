@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import park_auth.api_functions as api
-from pages.models import Car, User_developed, User,Totem
+from pages.models import Totem
 
 @api_view(['GET']) 
 def start_card(request, totem_id, secret_token, card_info):
@@ -30,9 +30,10 @@ def start_card(request, totem_id, secret_token, card_info):
     return Response({"type": "start", "secret_token": secret_token, "card_info": card_info})
 
 
-# @api_view(['GET']) 
-# def get_totem_infos(request, totem_id):
-#     return Response(api.get_totem_infos(totem_id))
+@api_view(['GET']) 
+def get_totem_infos(request, totem_id):
+    
+    return Response(async_to_sync(api.get_totem_infos)(totem_id))
 # #--------------------------------------------------------------------------------------------------
 
 # def new_ticket(duration, price, totem_id, plate):
