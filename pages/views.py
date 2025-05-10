@@ -29,18 +29,27 @@ def start_card(request, totem_id, secret_token, card_info):
     
     return Response({"type": "start", "secret_token": secret_token, "card_info": card_info})
 
+# #--------------------------------------------------------------------------------------------------
 
 @api_view(['GET']) 
-def get_totem_infos(request, totem_id):
-    
-    return Response(async_to_sync(api.get_totem_infos)(totem_id))
+def get_totem_infos(request, totem_id , secret_token):   
+    return Response(async_to_sync(api.get_totem_infos)(totem_id, secret_token))
 # #--------------------------------------------------------------------------------------------------
+@api_view(['GET']) 
+def  get_user_cars(request, username):   
+    return Response(async_to_sync(api.get_user_cars)(username))
+# #--------------------------------------------------------------------------------------------------
+@api_view(['GET']) 
+def new_ticket(request,duration, price, totem_id, secret_token, plate):
+    return Response(async_to_sync(api.new_ticket)(duration, price, totem_id, secret_token, plate))
+#     
+#     pass
+# #--------------------------------------------------------------------------------------------------
+@api_view(['GET']) 
+def get_car_parking_status(request,plate):
+    return Response(async_to_sync(api.get_car_parking_status)(plate))
 
-# def new_ticket(duration, price, totem_id, plate):
-#     pass
 # #--------------------------------------------------------------------------------------------------
-# def get_car_parking_status(plate):
-#     pass
-# #--------------------------------------------------------------------------------------------------
-# def pay_ticket(ticket_id):
-#     pass
+@api_view(['GET']) 
+def pay_ticket(request,ticket_id):
+    return Response(async_to_sync(api.pay_ticket)(ticket_id))

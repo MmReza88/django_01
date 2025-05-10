@@ -6,14 +6,14 @@ from django.db import IntegrityError
 
 
 @database_sync_to_async
-def get_totem_infos(totem_id):
+def get_totem_infos(totem_id, secret_token):
     from pages.models import Totem
 
     try:
         numeric_id = totem_id.split('_')[1]
         totem = Totem.objects.select_related("parking__zone").get(identity_code=numeric_id)
-
-        # Convert prices and durations to lists
+        if totem.secret_token != secret_token:
+            return {"type": "error", "error": "Invalid secret token."} 
         price_list = [int(num) for num in totem.parking.zone.prices.split(',')]
         durations_list = [int(num) for num in totem.parking.zone.durations.split(',')]
 
@@ -58,17 +58,21 @@ def get_user_cars(username):
 
 # #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
-
-def new_ticket(duration, price, totem_id, plate):
+def new_ticket(duration, price, totem_id,secret_token, plate):
     from pages.models import Totem, Car, Totem, Ticket
-
+    
     try:
         totem_pk = int(totem_id.split('_')[1])
         
         totem = Totem.objects.get(identity_code=totem_pk)
-        
+        if totem.secret_token != secret_token:
+            return {"type": "error", "error": "Invalid secret token."}        
         car, created = Car.objects.get_or_create(plate_number=plate.upper())
-                    
+
+        try:
+            price = float(price) 
+        except ValueError:
+            return {"type": "error", "error": "Invalid price format."}           
         ticket = Ticket.objects.create(
             duration=duration,
             price=price,
@@ -77,7 +81,6 @@ def new_ticket(duration, price, totem_id, plate):
             payment_done=False
         )
         print("Ticket created successfully")
-        print(ticket.pk)
         
         return ({
             "type": "ticket_creation",
@@ -111,8 +114,6 @@ def get_car_parking_status(plate):
         # Get the most recent valid ticket for this car
         latest_ticket = Ticket.objects.filter(
             car=car,
-            payment_done=True,
-
         ).order_by('-start_time').first()
 
         if latest_ticket:
@@ -121,17 +122,20 @@ def get_car_parking_status(plate):
             time_left = max(0, (expiration_time - timezone.now()).total_seconds() // 60)
             print(int(time_left))
 
-            print("ticket found")     
+            print("ticket found")   
+            
             return ({
                 "type": "get_car_parcking_status",
-                "time_left": str(int(time_left))
+                "payment_done": latest_ticket.payment_done,
+                "time_left": int(time_left)
             })
         
         else:
-            return ({
-                "type": "get_car_parcking_status",
-                "time_left": "0"
-            })
+            return {"type": "error", "error": "no active ticket found."}
+    except Car.DoesNotExist:
+        print("Car not found")
+        return {"type": "error", "error": "car does not exist."}
+
 
     except Exception as e:
         print("Handle any unexpected errors")
