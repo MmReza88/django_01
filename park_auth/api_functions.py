@@ -6,14 +6,14 @@ from django.db import IntegrityError
 
 
 @database_sync_to_async
-def get_totem_infos(totem_id, secret_token):
+def get_totem_infos(totem_id):
     from pages.models import Totem
 
     try:
         numeric_id = totem_id.split('_')[1]
         totem = Totem.objects.select_related("parking__zone").get(identity_code=numeric_id)
-        if totem.secret_token != secret_token:
-            return {"type": "error", "error": "Invalid secret token."} 
+        # if totem.secret_token != secret_token:
+            # return {"type": "error", "error": "Invalid secret token."} 
         price_list = [int(num) for num in totem.parking.zone.prices.split(',')]
         durations_list = [int(num) for num in totem.parking.zone.durations.split(',')]
 
