@@ -101,9 +101,7 @@ def new_ticket(duration, price, totem_id,secret_token, plate):
 
 
 #--------------------------------------------------------------------------------------------------
-
 @database_sync_to_async
-
 def get_car_parking_status(plate):
     from pages.models import Ticket, Car
 
@@ -126,8 +124,10 @@ def get_car_parking_status(plate):
             
             return ({
                 "type": "get_car_parcking_status",
-                "payment_done": latest_ticket.payment_done,
-                "time_left": int(time_left)
+                "payment_done": latest_ticket.payment_done, # To remove
+                "time_left": int(time_left),
+                "start_time": 0, # type : epoch 
+                "end_time": 0, # type : epoch 
             })
         
         else:
@@ -143,7 +143,7 @@ def get_car_parking_status(plate):
     
 
 # #--------------------------------------------------------------------------------------------------
-
+# remove this one
 @database_sync_to_async
 
 def pay_ticket(ticket_id):
