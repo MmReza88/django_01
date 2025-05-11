@@ -42,7 +42,7 @@ rm -rf django_01 && git clone https://github.com/MmReza88/django_01.git
 5.Ctrl + B, then D (detaches without stopping the server).
 
 --stop server
-3.tmux attach -t django_server (if there isn a running tmux ession)
+3.tmux attach -t django_server (if there is a running tmux ession)
 4.Ctrl + C (stop running tmux session)
 5.exit
 ```
