@@ -23,7 +23,7 @@ pip install djangorestframework
 
 mail : mr.sarrami.88@gmail.com  
 pass : Mr88098845a
-public dns : 13.61.0.132
+public dns : 13.61.0.132:8000
 ```
 
 ### reclone the repository on aws :
