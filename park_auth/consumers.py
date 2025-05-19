@@ -18,7 +18,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print(f"Decoded data : {data}")
+        print(f"Decoded totem data : {data}")
 
         if data["type"] == "set_client_id":
             self.client_id = data["client_id"]
