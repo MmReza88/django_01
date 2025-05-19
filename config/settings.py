@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     
     'pages',
     'park_auth',
+    'control_admin',
     
     'rest_framework',
     "corsheaders",
