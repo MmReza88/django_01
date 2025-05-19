@@ -58,84 +58,126 @@ def get_user_cars(username):
 
 # #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
-def new_ticket(duration, price, totem_id,secret_token, plate):
-    from pages.models import Totem, Car, Totem, Ticket
+def new_ticket(duration, price, totem_id,secret_token, plate , card_number):
+    from pages.models import Totem, Car, Totem, Ticket , Card , Parking
     
     try:
         totem_pk = int(totem_id.split('_')[1])
-        
-        totem = Totem.objects.get(identity_code=totem_pk)
-        if totem.secret_token != secret_token:
-            return {"type": "error", "error": "Invalid secret token."}        
-        car, created = Car.objects.get_or_create(plate_number=plate.upper())
-
-        try:
-            price = float(price) 
-        except ValueError:
-            return {"type": "error", "error": "Invalid price format."}           
-        ticket = Ticket.objects.create(
-            duration=duration,
-            price=price,
-            totem=totem,
-            car=car,
-            payment_done=False
-        )
-        print("Ticket created successfully")
-        
-        return ({
-            "type": "ticket_creation",
-            "status": "success",
-        })
     
-    except ObjectDoesNotExist:
-        print("Totem not found")
+    except (IndexError, ValueError):
+        print("Invalid totem_id format")           
+        return {"type": "error", "error": "Invalid totem_id format."}
+    
+    try:
+        totem = Totem.objects.get(identity_code=totem_pk)
+    except Totem.DoesNotExist:
+        print("Totem not found")           
         return {"type": "error", "error": "totem does not exist."}
+    
+    if totem.secret_token != secret_token:
+        print("Invalid secret token")
+        return {"type": "error", "error": "Invalid secret token."} 
+    
+    Parking = totem.parking
+    if Parking is None:
+        print("Parking not found")           
+        return {"type": "error", "error": "Parking not found."}
+    
+    car, created = Car.objects.get_or_create(plate_number=plate.upper())
+           
+    try:
+        price = float(price) 
+    except ValueError:
+        return {"type": "error", "error": "Invalid price format."}           
+    try:
+        duration = int(duration)
+    except ValueError:
+        return {"type": "error", "error": "Invalid duration format."}    
+    try:
+        card = Card.objects.get(card_number=card_number)
+    except Card.DoesNotExist:
+        print("Card not found")           
+        return {"type": "error", "error": "card does not exist."}
 
-    except IntegrityError:
-        print("Totem not found")
-        return {"type": "error", "error": "Integrity error: possible duplicate entry"}
 
+
+    try:
+        ticket_qs=Ticket.objects.filter(
+            car=car,
+            Parking=Parking,
+            stop_time__gt=timezone.now()
+        )
+        
+        if ticket_qs.exists():
+            ticket = ticket_qs.first()  
+            ticket.stop_time += timezone.timedelta(minutes=duration)  
+            ticket.save()  # Save the changes
+            print("active Ticket found")
+            print("Ticket updated with new stop_time")
+            return ({
+                    "type": "ticket_update",
+                    "status": "success",
+                })
+        else:
+            print("No active ticket found")
+            # Create a new ticket
+            
+            ticket = Ticket.objects.create(
+                #duration=duration,
+                stop_time=timezone.now() + timezone.timedelta(minutes=duration),
+                price=price,
+                #totem=totem,
+                Parking=Parking,
+                car=car,
+                card_number=card_number,
+                )
+            print("Ticket created successfully")
+            return ({
+                    "type": "ticket_creation",
+                    "status": "success",
+                })   
     except Exception as e:
-        print("An unexpected error occurred")        
+        print("Handle any unexpected errors")
         return {"type": "error", "error": f"Server error: {str(e)}"}
-
-
+    
 #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
 def get_car_parking_status(plate):
     from pages.models import Ticket, Car
 
-    try:
-        
+    try: 
         car= Car.objects.get(plate_number=plate.upper())
+    except Car.DoesNotExist:
+        print("Car not found")
+        return ({
+                "type": "get_car_parcking_status",
+                "time_left": int(0),
+                "end_time":  None,
 
-        # Get the most recent valid ticket for this car
+            })
+
+    try:
         latest_ticket = Ticket.objects.filter(
             car=car,
         ).order_by('-start_time').first()
 
         if latest_ticket:
-            # Calculate minutes remaining
-            expiration_time = latest_ticket.start_time + timezone.timedelta(minutes=latest_ticket.duration)
-            time_left = max(0, (expiration_time - timezone.now()).total_seconds() // 60)
-            print(int(time_left))
-
-            print("ticket found")   
-            
+            time_left = max(0, (latest_ticket.stop_time - timezone.now()).total_seconds() // 60)            
+            print("Ticket found")
+            print("Time left in minutes:", time_left)
             return ({
                 "type": "get_car_parcking_status",
-                "payment_done": latest_ticket.payment_done, # To remove
                 "time_left": int(time_left),
-                "start_time": 0, # type : epoch 
-                "end_time": 0, # type : epoch 
+                "end_time": latest_ticket.stop_time.strftime("%Y-%m-%d %H:%M:%S"),
             })
-        
         else:
-            return {"type": "error", "error": "no active ticket found."}
-    except Car.DoesNotExist:
-        print("Car not found")
-        return {"type": "error", "error": "car does not exist."}
+            print("No active ticket found")
+            return ({
+                "type": "get_car_parcking_status",
+                "time_left": int(0),
+                "end_time":  None,
 
+            })
 
     except Exception as e:
         print("Handle any unexpected errors")
@@ -143,31 +185,3 @@ def get_car_parking_status(plate):
     
 
 # #--------------------------------------------------------------------------------------------------
-# remove this one
-@database_sync_to_async
-
-def pay_ticket(ticket_id):
-    from pages.models import  Ticket
-
-    try:
-        ticket = Ticket.objects.get(id=ticket_id)
-        
-        ticket.payment_done = True
-        ticket.save()
-        print("Ticket payment updated successfully")
-        return ({
-            "type": "pay_ticket",
-            "status": "success",
-        })
-
-    except Ticket.DoesNotExist:
-        print("Ticket not found")
-        return ({
-            "type": "pay_ticket",
-            "status": "failed",
-        })
-    
-    except Exception as e:
-        print("Handle any unexpected errors")
-        return {"type": "error", "error": f"Server error: {str(e)}"}
-    

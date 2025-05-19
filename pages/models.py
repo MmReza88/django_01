@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Service_provider (models.Model):  #Admin define => totem can get variables by totem
     name = models.CharField(max_length=64, unique=True, blank=False)
@@ -38,7 +39,8 @@ class Parking (models.Model):
     
     address= models.CharField(max_length=64, unique=True, blank=False)
     zone = models.ForeignKey(Zone ,on_delete=models.DO_NOTHING, blank=False , null=True)
-    
+    #id = models.IntegerField(unique=True, blank=False , null=True) 
+   
     def __str__(self):
         return self.address.capitalize() 
 
@@ -75,16 +77,21 @@ class Car(models.Model):
 class Ticket(models.Model):
     
     start_time = models.DateTimeField(auto_now_add=True,null=True)
-    
-    totem = models.ForeignKey(Totem ,on_delete=models.DO_NOTHING, blank=False , null=True)
-    
+    stop_time = models.DateTimeField(null=True)
+
+    def is_active(self):
+        now = timezone.now()
+        return self.start_time and self.stop_time and self.start_time <= now < self.stop_time
+
+    #totem = models.ForeignKey(Totem ,on_delete=models.DO_NOTHING, blank=False , null=True)
     car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
- 
-    duration = models.IntegerField(blank=False, null=True)
+    Parking = models.ForeignKey(Parking ,on_delete=models.DO_NOTHING, blank=False , null=True)
+    #duration = models.IntegerField(blank=False, null=True)
     price = models.FloatField(blank=False, null=True)
-    payment_done = models.BooleanField(default=False)
+    card_number = models.CharField(max_length=64, blank=False, null=True)
     def __str__(self): 
-        return f"Ticket #{str(self.totem.identity_code)} - {self.car} (Duration: {self.duration} mins)" 
+        return f"Ticket #{str(self.Parking)} - {self.car} (start time : {self.start_time} - stop time : {self.stop_time})" 
+
 class Chalk(models.Model):
    
     #user is controler
@@ -101,3 +108,8 @@ class Fine(models.Model):
    #maybe the car doesn't have user (which obligatory should have codice fischale to apply the fine)
    car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
    issued_time = models.DateTimeField(auto_now_add=True,null=True)
+
+class Card(models.Model):
+    card_number = models.CharField(max_length=64, unique=True, blank=False , null=True)
+    def __str__(self):
+        return self.card_number.capitalize()

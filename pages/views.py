@@ -40,8 +40,8 @@ def  get_user_cars(request, username):
     return Response(async_to_sync(api.get_user_cars)(username))
 # #--------------------------------------------------------------------------------------------------
 @api_view(['GET']) 
-def new_ticket(request,duration, price, totem_id, secret_token, plate):
-    return Response(async_to_sync(api.new_ticket)(duration, price, totem_id, secret_token, plate))
+def new_ticket(request,duration, price, totem_id, secret_token, plate, card_number):
+    return Response(async_to_sync(api.new_ticket)(duration, price, totem_id, secret_token, plate,  card_number))
 #     
 #     pass
 # #--------------------------------------------------------------------------------------------------
@@ -50,6 +50,3 @@ def get_car_parking_status(request,plate):
     return Response(async_to_sync(api.get_car_parking_status)(plate))
 
 # #--------------------------------------------------------------------------------------------------
-@api_view(['GET']) 
-def pay_ticket(request,ticket_id):
-    return Response(async_to_sync(api.pay_ticket)(ticket_id))
