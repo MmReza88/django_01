@@ -1,6 +1,5 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from . import api_functions
 
 #-------------------------------------------------------------------------------------
 
