@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>log in</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Please log in</h1>
+        <p>Input your credential data</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="login">
+        </form>
+
+        {% for message in messages %}
+            <p>{{message}}</p>
+        {% endfor %}
+
+    </div>
+</body>
+</html>

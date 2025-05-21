@@ -5,7 +5,9 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 
 class MessageConsumer(AsyncWebsocketConsumer):
-    
+    client_id = None
+    username = None
+    group = None
 
     async def connect(self):
         await self.accept()
@@ -17,7 +19,9 @@ class MessageConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         print(f"Decoded control_admin data : {data}")
-
+        if data["type"] == "startup":
+            self.client_id = data["client_id"]
+            await self.channel_layer.group_add(self.client_id, self.channel_name)
     
     
     async def send_login(self, event):
@@ -25,11 +29,6 @@ class MessageConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "login",
             "username": event["username"],
+            "group": "controler"
         }))
         self.client_username = event["username"]
-    
-    async def send_start(self, event):
-        print("sending start because card is here")
-        await self.send(text_data=json.dumps({
-            "type": "start",
-        }))

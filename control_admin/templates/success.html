@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Success</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        {% if user.is_authenticated %}
+        <p>Login successfull as {{ user.username }}</p>
+        <a href="{% url 'logout' c_id %}">Logout</a>
+        {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'login' c_id %}">Login</a>
+        {% endif %}
+    </div>
+</body>
+</html>

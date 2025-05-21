@@ -142,7 +142,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static'),
-    os.path.join(BASE_DIR,'park_auth/static')
+    os.path.join(BASE_DIR,'park_auth/static'),
+    os.path.join(BASE_DIR,'control_admin/static')
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Folder where everything gets collected
