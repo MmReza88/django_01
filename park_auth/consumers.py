@@ -8,6 +8,7 @@ from . import api_functions
 class MessageConsumer(AsyncWebsocketConsumer):
     client_id = None
     client_username = None
+    card = None
 
     async def connect(self):
         await self.accept()
@@ -36,16 +37,14 @@ class MessageConsumer(AsyncWebsocketConsumer):
             price = data["price"]
             totem_id = data["totem_id"]     
             plate = data["plate"]
-            response_data = await api_functions.new_ticket(duration, price, totem_id, plate)
+            token = data["token"]
+            response_data = await api_functions.new_ticket(duration, price, totem_id, token, plate, self.card)
             await self.send(text_data=json.dumps(response_data))
         elif data["type"] == "get_car_parcking_status":
             plate = data["plate"]
             response_data = await api_functions.get_car_parking_status(plate)
             await self.send(text_data=json.dumps(response_data))
-        elif data["type"] == "pay_ticket":
-            ticket_id = data["ticket_id"]
-            response_data = await api_functions.pay_ticket(ticket_id)
-            await self.send(text_data=json.dumps(response_data))
+
 
         else:
             response_data = {
@@ -65,6 +64,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
     
     async def send_start(self, event):
         print("sending start because card is here")
+        self.card = event["card"]
         await self.send(text_data=json.dumps({
             "type": "start",
         }))

@@ -20,7 +20,8 @@ def start_card(request, totem_id, secret_token, card_info):
         async_to_sync(channel_layer.group_send)(
             totem_id,
             {
-                "type": "send_start",  # this matches a method name in your consumer
+                "type": "send_start",
+                "card": card_info,
             }
         )
     except Exception as e:

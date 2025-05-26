@@ -22,6 +22,18 @@ class MessageConsumer(AsyncWebsocketConsumer):
         if data["type"] == "startup":
             self.client_id = data["client_id"]
             await self.channel_layer.group_add(self.client_id, self.channel_name)
+        elif data["type"] == "control_plate":
+            response_data = {
+                "type": "control_plate",
+                "username": "some",
+                "ticket_info": {
+                    "start": 0,
+                    "end": 1748006179,
+                },
+                "last_fines": [1748006179],
+                "last_chalks": [1748006000]
+            }
+            await self.send(text_data=json.dumps(response_data))
     
     
     async def send_login(self, event):
