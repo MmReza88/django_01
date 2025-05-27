@@ -89,8 +89,10 @@ class Ticket(models.Model):
     #duration = models.IntegerField(blank=False, null=True)
     price = models.FloatField(blank=False, null=True)
     card_number = models.CharField(max_length=64, blank=False, null=True)
+    id = models.AutoField(primary_key=True, null=False)  # Auto-incrementing primary key
+
     def __str__(self): 
-        return f"Ticket #{str(self.Parking)} - {self.car} (start time : {self.start_time} - stop time : {self.stop_time})" 
+        return f"Ticket #{self.id} - {str(self.Parking)} - {self.car} (start time : {self.start_time} - stop time : {self.stop_time})" 
 
 class Chalk(models.Model):
    
