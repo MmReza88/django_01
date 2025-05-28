@@ -65067,7 +65067,7 @@ $0(){return A.bq([this.a.c.$1("help")],t.z)},
 $S:0}
 A.Ei.prototype={
 L(a){var s=null,r=t.w,q=A.b6(a,s,r).w.a.b,p=0.05185185185185185*q,o=t.E
-return A.he(B.aD,A.a([A.fi(A.a([A.e6(B.bE,B.i,s,p),B.Mb,A.bH("Back",s,s,s,A.bn(s,s,B.i,s,s,s,s,s,s,s,s,p,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],o),B.c8,!0,!1,!0,new A.WO(this)),A.hF(A.iG(A.a([A.bH("Please scan the QR code to log in:",s,s,s,A.bn(s,s,s,s,s,s,s,s,s,s,s,0.03888888888888889*q,s,s,B.b2,s,s,!0,s,s,s,s,s,s,s,s),B.ct,s),A.cA(s,0.018518518518518517*q,s),new A.vw("http://localhost:8000/auth/login/totem_321",A.b6(a,s,r).w.a.b/2,s)],o),B.Y,B.c7,B.ay),s,s)],o),B.O,B.az,s)}}
+return A.he(B.aD,A.a([A.fi(A.a([A.e6(B.bE,B.i,s,p),B.Mb,A.bH("Back",s,s,s,A.bn(s,s,B.i,s,s,s,s,s,s,s,s,p,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],o),B.c8,!0,!1,!0,new A.WO(this)),A.hF(A.iG(A.a([A.bH("Please scan the QR code to log in:",s,s,s,A.bn(s,s,s,s,s,s,s,s,s,s,s,0.03888888888888889*q,s,s,B.b2,s,s,!0,s,s,s,s,s,s,s,s),B.ct,s),A.cA(s,0.018518518518518517*q,s),new A.vw("http://13.61.0.132:8000/auth/login/totem_321",A.b6(a,s,r).w.a.b/2,s)],o),B.Y,B.c7,B.ay),s,s)],o),B.O,B.az,s)}}
 A.WO.prototype={
 $0(){return A.bq([this.a.c.$1("home")],t.z)},
 $S:0}
@@ -65141,7 +65141,7 @@ $0(){return this.a.LR(0,"del")},
 $S:0}
 A.wt.prototype={
 ai(){var s=t.t
-return new A.zp(A.a([],s),A.a([],s),A.a([],t.s),A.as2(A.kL("ws://localhost:8000/ws/login/"),null))}}
+return new A.zp(A.a([],s),A.a([],s),A.a([],t.s),A.as2(A.kL("ws://13.61.0.132:8000/ws/login/"),null))}}
 A.zp.prototype={
 a_w(a){this.al(new A.aaW(this,a))},
 au(){var s,r,q,p=this
