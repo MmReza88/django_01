@@ -1,0 +1,14 @@
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/icudtl.dat
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/flutter_windows.dll
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/url_launcher_windows_plugin.dll
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.bin
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.bin.json
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/AssetManifest.json
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/assets/background.jpg
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/FontManifest.json
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/fonts/MaterialIcons-Regular.otf
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/kernel_blob.bin
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/NativeAssetsManifest.json
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/NOTICES
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/NOTICES.Z
+C:/dev/Polito/project/project_ui/build/windows/x64/runner/Debug/data/flutter_assets/shaders/ink_sparkle.frag

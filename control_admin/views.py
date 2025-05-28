@@ -43,3 +43,6 @@ def lout(request, client_id):
     logout(request)
     # send logged out to client
     return redirect(reverse('success', args=[client_id]))
+
+# def badge(request, badge_id):
+#     print(f"Received a badge: {}")
