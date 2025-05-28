@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Details</title>
+</head>
+<body>
+    {% if error %}
+        <h2>{{ error }}</h2>
+    {% else %}
+        <h1>Ticket #{{ ticket.id }}</h1>
+
+        <p><strong>Start Time:</strong> {{ ticket.start_time }}</p>
+        <p><strong>Stop Time:</strong> {{ ticket.stop_time }}</p>
+        <p><strong>Is Active:</strong> {{ ticket.is_active }}</p>
+
+        <p><strong>Car plate:</strong> {{ ticket.car }}</p>
+        <p><strong>Parking:</strong> {{ ticket.Parking }}</p>
+
+        
+        <img src="data:image/png;base64,{{ qr_code }}" alt="Ticket QR Code">
+
+
+    {% endif %}
+
+</body>
+</html>

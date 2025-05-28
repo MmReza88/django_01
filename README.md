@@ -17,6 +17,8 @@ pip install daphne
 pip install channels
 pip install django-cors-headers
 pip install djangorestframework
+pip install pillow
+pip install qrcode
 ```
 ### aws :
 ```
