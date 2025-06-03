@@ -57,7 +57,7 @@ def get_user_cars(username):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 
 # #--------------------------------------------------------------------------------------------------
-@database_sync_to_async
+@database_sync_to_async#
 def new_ticket(duration, price, totem_id,secret_token, plate , card_number):
     from pages.models import Totem, Car, Totem, Ticket , Card , Parking
     
