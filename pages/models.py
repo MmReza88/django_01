@@ -60,6 +60,7 @@ class Totem(models.Model):
 
 #-------------------------------------------------------------------------------------------------------------------
 
+# Connect a user to a company
 class User_developed (models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
     codice_fiscale = models.CharField(max_length=64)
