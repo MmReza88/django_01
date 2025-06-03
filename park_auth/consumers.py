@@ -35,7 +35,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
         elif data["type"] == "create_new_ticket":
             duration = data["duration"]
             price = data["price"]
-            totem_id = data["totem_id"]     
+            totem_id = data["totem_id"]
             plate = data["plate"]
             token = data["token"]
             response_data = await api_functions.new_ticket(duration, price, totem_id, token, plate, self.card)
