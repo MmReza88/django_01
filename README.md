@@ -18,6 +18,7 @@ pip install channels
 pip install django-cors-headers
 pip install djangorestframework
 pip install pillow
+pip install whitenoise
 pip install qrcode
 ```
 ### aws :
