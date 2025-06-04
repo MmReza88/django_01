@@ -62,7 +62,6 @@ def get_car_parking_status(request,plate):
     return Response(async_to_sync(api.get_car_parking_status)(plate))
 
 # #--------------------------------------------------------------------------------------------------
-@api_view(['GET']) 
 def ticket_view(request, ticket_id):
     try:
         ticket =Ticket.objects.get(id=ticket_id)

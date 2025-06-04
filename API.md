@@ -1,6 +1,33 @@
 # API Documentation
 
 ## TOTEM flutter app 
+
+### get_user_for_badge(badge_number)
+
+return:
+```json
+{
+    "username": "biiopboopm",
+    "group": "admin or controller",
+}
+```
+
+### get_all_info_car(plate_nb)
+
+returns: 
+```json
+{
+    "type": "control_plate",
+    "username": "some if there is",
+    "ticket_info": {
+        "start": 0, # timestamps
+        "end": 0, # timestamps
+    },
+    "last_fines": [1748006179, 1748006179, 1748006179], # timestamps
+    "last_chalks": [1748006000] # timestamps
+}
+```
+
 ### request :
     http://127.0.0.1:8000/api/totem/totem_xxx/
     e.g. : http://127.0.0.1:8000/api/totem/totem_321/
