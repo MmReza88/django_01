@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User , Group
 from django.utils import timezone
 
 class Service_provider (models.Model):  #Admin define => totem can get variables by totem
@@ -65,9 +65,18 @@ class User_developed (models.Model):
     codice_fiscale = models.CharField(max_length=64)
    
     def __str__(self):
-        return self.codice_fiscale.capitalize() 
+        return self.user.username.capitalize()
 
-    
+
+class controler (models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
+    badge_number = models.CharField(max_length=64, blank=False, null=True)
+    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, blank=False, null=False)
+
+    def __str__(self):
+        return self.user.username.capitalize()
+
+
 class Car(models.Model):
     plate_number = models.CharField(max_length=64, unique=True,blank=False, null=True)
     user = models.ForeignKey(User_developed,on_delete=models.DO_NOTHING, blank=True, null=True)
@@ -96,21 +105,19 @@ class Ticket(models.Model):
 
 class Chalk(models.Model):
    
-    #user is controler
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
     #maybe the car doesn't have user
     car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
     issued_time = models.DateTimeField(auto_now_add=True,null=True)
-
+    def __str__(self):
+        return f"Chalk for {self.car} issued at {self.issued_time}"
 
 class Fine(models.Model):
  
-   #user is controler
-   user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
    #maybe the car doesn't have user (which obligatory should have codice fischale to apply the fine)
    car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
    issued_time = models.DateTimeField(auto_now_add=True,null=True)
-
+   def __str__(self):
+         return f"Fine for {self.car} issued at {self.issued_time}"
 class Card(models.Model):
     card_number = models.CharField(max_length=64, unique=True, blank=False , null=True)
     def __str__(self):

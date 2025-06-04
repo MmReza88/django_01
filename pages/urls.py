@@ -8,5 +8,6 @@ urlpatterns = [
     path('new-ticket/<int:duration>/<str:price>/<str:totem_id>/<str:secret_token>/<str:plate>/<str:card_number>/', views.new_ticket, name='new_ticket'),
     path('car-status/<str:plate>/', views.get_car_parking_status, name='get_car_parking_status'),
     path('ticket-view/<int:ticket_id>/', views.ticket_view, name='ticket view'),
-
+    path('badge_user/<str:badge_number>/', views.get_user_for_badge, name='get_user_for_badge'),
+    path('car-info/<str:plate>/', views.get_all_info_car, name='get_all_info_car'),
 ]

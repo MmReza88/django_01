@@ -109,6 +109,14 @@ def ticket_view(request, ticket_id):
         return render(request, 'ticket_detail.html', {'error': f'Server error: {str(e)}'}, status=500)
 
 
+# #--------------------------------------------------------------------------------------------------
+@api_view(['GET'])
+def get_user_for_badge(request, badge_number):
+    return Response(async_to_sync(api.get_user_for_badge)(badge_number))
+# #--------------------------------------------------------------------------------------------------
+@api_view(['GET'])
+def get_all_info_car(request, plate):
+    return Response(async_to_sync(api.get_all_info_car)(plate))
 
 
 

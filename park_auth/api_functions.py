@@ -185,3 +185,79 @@ def get_car_parking_status(plate):
     
 
 # #--------------------------------------------------------------------------------------------------
+
+@database_sync_to_async
+def get_user_for_badge(badge_number):
+    from pages.models import controler, User
+
+    try:
+        controller = controler.objects.get(badge_number=badge_number)
+    except controler.DoesNotExist:
+        return {"type": "error", "error": "No controller has been assigned for this badge."}
+    try:
+        user = controller.user
+       
+        if not user:
+            return {"type": "error", "error": "User not found for the given badge."}
+        group = controller.group
+
+        if not group:
+            return {"type": "error", "error": "No group assigned to this controller."}
+        
+       
+        return {
+            "username": user.username,
+            "group": controller.group.name ,
+        }
+    except Exception as e:
+        return {"type": "error", "error": f"Server error: {str(e)}"}
+#
+# #--------------------------------------------------------------------------------------------------
+@database_sync_to_async
+def get_all_info_car(plate):
+    from pages.models import Car, User_developed, Fine, Chalk, Ticket
+    from django.utils import timezone
+
+    try:
+        car = Car.objects.get(plate_number=plate.upper())
+        user_developed = car.user
+        username = user_developed.user.username if user_developed else None
+
+        tickets = Ticket.objects.filter(car=car).order_by('-start_time').first()
+        if tickets:
+            ticket_data = {
+                "start_time": max(0, tickets.start_time.timestamp()) if tickets.start_time else 0,
+                "stop_time": max(0, tickets.stop_time.timestamp()) if tickets.stop_time else 0,
+            }
+        else:
+            ticket_data = {
+                "start_time": 0,
+                "stop_time": 0,
+            }
+
+        fines = Fine.objects.filter(car=car).order_by('-issued_time')[:3]
+        last_fines = [
+            int(f.issued_time.timestamp()) for f in fines if f.issued_time
+        ]
+
+        chalks = Chalk.objects.filter(car=car).order_by('-issued_time')[:3]
+        last_chalks = [
+            int(c.issued_time.timestamp()) for c in chalks if c.issued_time
+        ]
+
+        return {
+            "type": "control_plate",
+            "plate": car.plate_number,
+            "username": username,
+            "ticket": ticket_data,
+            "last_fines": last_fines,
+            "last_chalks": last_chalks,
+        }
+
+    except Car.DoesNotExist:
+        return {"type": "error", "error": "Car not found."}
+
+    except Exception as e:
+        return {"type": "error", "error": f"Server error: {str(e)}"}
+
+    #--------------------------------------------------------------------------------------------------
