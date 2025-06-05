@@ -86,7 +86,7 @@ class Car(models.Model):
     
 class Ticket(models.Model):
     
-    start_time = models.DateTimeField(auto_now_add=True,null=True)
+    start_time = models.DateTimeField(null=True)
     stop_time = models.DateTimeField(null=True)
 
     def is_active(self):

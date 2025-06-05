@@ -91,7 +91,7 @@ def ticket_view(request, ticket_id):
         qr_base64 = base64.b64encode(buffer.getvalue()).decode()
         return render(request, 'ticket_detail.html', {
             'ticket': ticket,
-            'qr_code': qr_base64,
+           # 'qr_code': qr_base64,
             'ticket_url': ticket_url
         })
 

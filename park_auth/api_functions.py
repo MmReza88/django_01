@@ -57,89 +57,86 @@ def get_user_cars(username):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 
 # #--------------------------------------------------------------------------------------------------
-@database_sync_to_async#
-def new_ticket(duration, price, totem_id,secret_token, plate , card_number):
-    from pages.models import Totem, Car, Totem, Ticket , Card , Parking
-    
+@database_sync_to_async
+def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
+    from pages.models import Totem, Car, Ticket, Card
+    from django.utils import timezone
+
     try:
         totem_pk = int(totem_id.split('_')[1])
-    
     except (IndexError, ValueError):
-        print("Invalid totem_id format")           
         return {"type": "error", "error": "Invalid totem_id format."}
-    
+
     try:
         totem = Totem.objects.get(identity_code=totem_pk)
     except Totem.DoesNotExist:
-        print("Totem not found")           
-        return {"type": "error", "error": "totem does not exist."}
-    
+        return {"type": "error", "error": "Totem does not exist."}
+
     if totem.secret_token != secret_token:
-        print("Invalid secret token")
-        return {"type": "error", "error": "Invalid secret token."} 
-    
+        return {"type": "error", "error": "Invalid secret token."}
+
     Parking = totem.parking
     if Parking is None:
-        print("Parking not found")           
         return {"type": "error", "error": "Parking not found."}
-    
-    car, created = Car.objects.get_or_create(plate_number=plate.upper())
-           
+
+    car, _ = Car.objects.get_or_create(plate_number=plate.upper())
+
     try:
-        price = float(price) 
+        price = float(price)
     except ValueError:
-        return {"type": "error", "error": "Invalid price format."}           
+        return {"type": "error", "error": "Invalid price format."}
+
     try:
         duration = int(duration)
     except ValueError:
-        return {"type": "error", "error": "Invalid duration format."}    
+        return {"type": "error", "error": "Invalid duration format."}
+
     try:
         card = Card.objects.get(card_number=card_number)
     except Card.DoesNotExist:
-        print("Card not found")           
-        return {"type": "error", "error": "card does not exist."}
-
-
+        return {"type": "error", "error": "Card does not exist."}
 
     try:
-        ticket_qs=Ticket.objects.filter(
+        # Get the last ticket for this car and parking, regardless of active/inactive
+        last_ticket = Ticket.objects.filter(
             car=car,
-            Parking=Parking,
-            stop_time__gt=timezone.now()
-        )
-        
-        if ticket_qs.exists():
-            ticket = ticket_qs.first()  
-            ticket.stop_time += timezone.timedelta(minutes=duration)  
-            ticket.save()  # Save the changes
-            print("active Ticket found")
-            print("Ticket updated with new stop_time")
-            return ({
-                    "type": "ticket_update",
-                    "status": "success",
-                })
-        else:
-            print("No active ticket found")
-            # Create a new ticket
-            
-            ticket = Ticket.objects.create(
-                #duration=duration,
-                stop_time=timezone.now() + timezone.timedelta(minutes=duration),
-                price=price,
-                #totem=totem,
-                Parking=Parking,
-                car=car,
-                card_number=card_number,
-                )
-            print("Ticket created successfully")
-            return ({
-                    "type": "ticket_creation",
-                    "status": "success",
-                })   
-    except Exception as e:
-        print("Handle any unexpected errors")
-        return {"type": "error", "error": f"Server error: {str(e)}"}
+            Parking=Parking
+        ).order_by('-stop_time').first()
     
+        # Determine base time
+        now = timezone.now()
+        last_stop_time = now
+
+        if last_ticket:
+            last_stop_time = max(last_ticket.stop_time, now)
+
+        # Build the new ticket start/stop time
+        new_start_time = last_stop_time
+        new_stop_time = new_start_time + timezone.timedelta(minutes=duration)
+        Ticket.objects.create(
+            start_time=new_start_time,
+            stop_time=new_stop_time,
+            price=price,
+            Parking=Parking,
+            car=car,
+            card_number=card_number,
+        )
+        last_ticket = Ticket.objects.filter(
+            car=car,
+            Parking=Parking
+        ).order_by('-stop_time').first()
+
+        return {
+            "type": "ticket_creation",
+            "status": "success",
+            "ticket_id": last_ticket.id,
+            "start_time": int(last_ticket.start_time.timestamp()),
+            "stop_time": int(last_ticket.stop_time.timestamp()),
+        }
+
+    except Exception as e:
+        return {"type": "error", "error": f"Server error: {str(e)}"}
+
 #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
 def get_car_parking_status(plate):
@@ -219,15 +216,15 @@ def get_all_info_car(plate):
     from django.utils import timezone
 
     try:
-        car = Car.objects.get(plate_number=plate.upper())
+        car = Car.objects.get(plate_number=plate.upper()) 
         user_developed = car.user
         username = user_developed.user.username if user_developed else None
 
         tickets = Ticket.objects.filter(car=car).order_by('-start_time').first()
         if tickets:
             ticket_data = {
-                "start_time": max(0, tickets.start_time.timestamp()) if tickets.start_time else 0,
-                "stop_time": max(0, tickets.stop_time.timestamp()) if tickets.stop_time else 0,
+                "start_time": max(0, int(tickets.start_time.timestamp())) if tickets.start_time else 0,
+                "stop_time": max(0, int(tickets.stop_time.timestamp())) if tickets.stop_time else 0,
             }
         else:
             ticket_data = {
@@ -255,8 +252,20 @@ def get_all_info_car(plate):
         }
 
     except Car.DoesNotExist:
-        return {"type": "error", "error": "Car not found."}
-
+        return {
+            "type": "control_plate",
+            "plate": None,
+            "username": None,
+            "ticket": {
+                "start_time": None,
+                "stop_time": None,
+            },
+            "last_fines": None,
+            "last_chalks": None,
+        }    
+        
+        
+        
     except Exception as e:
         return {"type": "error", "error": f"Server error: {str(e)}"}
 
