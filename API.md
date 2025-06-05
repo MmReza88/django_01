@@ -71,6 +71,9 @@ Return JSON objectabout the status:
 ```json
 {
     "status": "success"
+    "ticket id " : string
+    "start time " : int (timestamp)
+    "stop time " :  int (timestam)
 }
 ```
 "success" or "failed" are the two only values possible.
