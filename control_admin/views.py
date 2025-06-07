@@ -5,6 +5,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from park_auth.api_functions import get_user_for_badge
 
 def lin(request, client_id):    
     def send_uname():
@@ -12,7 +15,7 @@ def lin(request, client_id):
         async_to_sync(channel_layer.group_send)(
             client_id,
             {
-                "type": "send_login",  # this matches a method name in your consumer
+                "type": "send_login",
                 "username": request.user.username,
             }
         )
@@ -44,5 +47,9 @@ def lout(request, client_id):
     # send logged out to client
     return redirect(reverse('success', args=[client_id]))
 
-# def badge(request, badge_id):
-#     print(f"Received a badge: {}")
+@api_view(['GET']) 
+def badge(request, client_id, badge_id):
+    print("badging here")
+    print(client_id)
+    print(async_to_sync(get_user_for_badge(badge_id)))
+    return Response({"hello": "there"})

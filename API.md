@@ -2,23 +2,49 @@
 
 ## TOTEM flutter app 
 
+### emit_new_chalk(plate) 
+
+create a new chalk and create car in the db if it does not already exists
+
+return:
+```json
+{"type": "success"}
+```
+
+### emit_new_fine(plate)
+
+create a new fine and create car in the db if it does not already exists
+
+return:
+```json
+{"type": "success"}
+```
+
 ### get_user_for_badge(badge_number)
+
+returns an error if the user is anything else than a controller
 
 return:
 ```json
 {
     "username": "biiopboopm",
-    "group": "admin or controller",
+    "group": "controller",
+    "service_provider": "some_random_service_provider_name"
 }
 ```
 
-### get_all_info_car(plate_nb)
+### get_all_info_car(plate_nb, service_provider)
+
+if the service provider is not the good one:
+```json
+{"type": "error", "error": "wrong service provider"}
+```
 
 returns: 
 ```json
 {
     "type": "control_plate",
-    "username": "some if there is",
+    "parking_name": "some_random_parking_name",
     "ticket_info": {
         "start": 0, # timestamps
         "end": 0, # timestamps
