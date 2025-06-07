@@ -91,10 +91,10 @@ def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
     except ValueError:
         return {"type": "error", "error": "Invalid duration format."}
 
-    try:
-        card = Card.objects.get(card_number=card_number)
-    except Card.DoesNotExist:
-        return {"type": "error", "error": "Card does not exist."}
+    # try:
+    #     card = Card.objects.get(card_number=card_number)
+    # except Card.DoesNotExist:
+    #     return {"type": "error", "error": "Card does not exist."}
 
     try:
         # Get the last ticket for this car and parking, regardless of active/inactive
@@ -129,7 +129,7 @@ def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
         return {
             "type": "ticket_creation",
             "status": "success",
-            "ticket_id": last_ticket.id,
+            "ticket_id": str(last_ticket.id),
             "start_time": int(last_ticket.start_time.timestamp()),
             "stop_time": int(last_ticket.stop_time.timestamp()),
         }
