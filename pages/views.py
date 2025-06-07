@@ -6,6 +6,7 @@ from asgiref.sync import async_to_sync
 import park_auth.api_functions as api
 from pages.models import Totem
 from pages.models import Ticket
+from pages.models import Service_provider
 from django.shortcuts import render
 from qrcode.constants import ERROR_CORRECT_L
 
@@ -114,8 +115,8 @@ def get_user_for_badge(request, badge_number):
     return Response(async_to_sync(api.get_user_for_badge)(badge_number))
 # #--------------------------------------------------------------------------------------------------
 @api_view(['GET'])
-def get_all_info_car(request, plate):
-    return Response(async_to_sync(api.get_all_info_car)(plate))
+def get_all_info_car(request, plate , service_provider):
+    return Response(async_to_sync(api.get_all_info_car)(plate, service_provider))
 
 
 

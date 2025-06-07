@@ -73,7 +73,8 @@ class controler (models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
     badge_number = models.CharField(max_length=64, blank=False, null=True)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, blank=False, null=False)
-
+    Service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=False, null=True)
+    
     def __str__(self):
         return self.user.username.capitalize()
 

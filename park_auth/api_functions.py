@@ -200,19 +200,22 @@ def get_user_for_badge(badge_number):
 
         if not group:
             return {"type": "error", "error": "No group assigned to this controller."}
-        
+        if group is not None:
+            if group.name != "controller":
+                return {"type": "error", "error": "The user is not a controller."}
        
         return {
             "username": user.username,
             "group": controller.group.name ,
+            "service_provider": controller.Service_provider.name if controller.Service_provider else None,
         }
     except Exception as e:
         return {"type": "error", "error": f"Server error: {str(e)}"}
 #
 # #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
-def get_all_info_car(plate):
-    from pages.models import Car, User_developed, Fine, Chalk, Ticket
+def get_all_info_car(plate , service_provider):
+    from pages.models import Car, User_developed, Fine, Chalk, Ticket ,Service_provider
     from django.utils import timezone
 
     try:
@@ -222,6 +225,13 @@ def get_all_info_car(plate):
 
         tickets = Ticket.objects.filter(car=car).order_by('-start_time').first()
         if tickets:
+            if tickets.Parking.zone.service_provider.name != service_provider:
+                return {
+                    "type": "error",
+                    "error": "wrong service provider.",
+                    "ticket service provider": tickets.Parking.zone.service_provider.name,
+                    "requested service provider": service_provider,
+                }
             ticket_data = {
                 "start_time": max(0, int(tickets.start_time.timestamp())) if tickets.start_time else 0,
                 "stop_time": max(0, int(tickets.stop_time.timestamp())) if tickets.stop_time else 0,
