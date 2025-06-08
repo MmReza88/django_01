@@ -185,18 +185,18 @@ def get_car_parking_status(plate):
 
 @database_sync_to_async
 def get_user_for_badge(badge_number):
-    from pages.models import controler, User
+    from pages.models import badge, User
 
     try:
-        controller = controler.objects.get(badge_number=badge_number)
-    except controler.DoesNotExist:
+        badge = badge.objects.get(badge_number=badge_number)
+    except badge.DoesNotExist:
         return {"type": "error", "error": "No controller has been assigned for this badge."}
     try:
-        user = controller.user
+        user = badge.user
        
         if not user:
             return {"type": "error", "error": "User not found for the given badge."}
-        group = controller.group
+        group = badge.group
 
         if not group:
             return {"type": "error", "error": "No group assigned to this controller."}
@@ -206,8 +206,8 @@ def get_user_for_badge(badge_number):
        
         return {
             "username": user.username,
-            "group": controller.group.name ,
-            "service_provider": controller.Service_provider.name if controller.Service_provider else None,
+            "group": badge.group.name ,
+            "service_provider": badge.Service_provider.name if badge.Service_provider else None,
         }
     except Exception as e:
         return {"type": "error", "error": f"Server error: {str(e)}"}

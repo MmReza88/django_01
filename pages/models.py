@@ -69,7 +69,7 @@ class User_developed (models.Model):
         return self.user.username.capitalize()
 
 
-class controler (models.Model):
+class badge (models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
     badge_number = models.CharField(max_length=64, blank=False, null=True)
     group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, blank=False, null=False)
