@@ -7,7 +7,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class MessageConsumer(AsyncWebsocketConsumer):
     client_id = None
     username = None
-    group = None
+    service_provider = None
 
     async def connect(self):
         await self.accept()
@@ -41,6 +41,8 @@ class MessageConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "login",
             "username": event["username"],
-            "group": "controler"
+            "group": "controller",
         }))
         self.client_username = event["username"]
+        self.service_provider = event["service_provider"]
+        
