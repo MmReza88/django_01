@@ -214,8 +214,6 @@ def get_all_info_car(plate , service_provider):
 
     try:
         car = Car.objects.get(plate_number=plate.upper()) 
-        user_developed = car.user
-        username = user_developed.user.username if user_developed else None
 
         tickets = Ticket.objects.filter(car=car).order_by('-start_time').first()
         if tickets:
@@ -249,7 +247,6 @@ def get_all_info_car(plate , service_provider):
         return {
             "type": "control_plate",
             "plate": car.plate_number,
-            "username": username,
             "ticket": ticket_data,
             "last_fines": last_fines,
             "last_chalks": last_chalks,
@@ -258,14 +255,13 @@ def get_all_info_car(plate , service_provider):
     except Car.DoesNotExist:
         return {
             "type": "control_plate",
-            "plate": None,
-            "username": None,
+            "plate": plate,
             "ticket": {
-                "start_time": None,
-                "stop_time": None,
+                "start_time": 0,
+                "stop_time": 0,
             },
-            "last_fines": None,
-            "last_chalks": None,
+            "last_fines": [],
+            "last_chalks": [],
         }    
         
         
