@@ -14,7 +14,6 @@ class City (models.Model):              #Service provider define => totem can ge
       return self.name.capitalize()
 
 class Zone (models.Model):
-    
     name = models.CharField (unique=True ,max_length=64, blank=False)
    
     city = models.ForeignKey(City ,on_delete=models.DO_NOTHING, blank=False , null=True)
@@ -36,7 +35,6 @@ class Zone (models.Model):
 
 
 class Parking (models.Model):
-    
     address= models.CharField(max_length=64, unique=True, blank=False)
     zone = models.ForeignKey(Zone ,on_delete=models.DO_NOTHING, blank=False , null=True)
     #id = models.IntegerField(unique=True, blank=False , null=True) 
@@ -61,10 +59,11 @@ class Totem(models.Model):
 #-------------------------------------------------------------------------------------------------------------------
 
 # Connect a user to a company
-class User_developed (models.Model):
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
+class User_developed(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, blank=False, null=True)
     codice_fiscale = models.CharField(max_length=64)
-   
+    service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, null=True, blank=True)
+
     def __str__(self):
         return self.user.username.capitalize()
 
@@ -85,7 +84,6 @@ class Car(models.Model):
         return self.plate_number.capitalize()  
     
 class Ticket(models.Model):
-    
     start_time = models.DateTimeField(null=True)
     stop_time = models.DateTimeField(null=True)
 
