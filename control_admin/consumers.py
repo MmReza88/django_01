@@ -35,6 +35,9 @@ class MessageConsumer(AsyncWebsocketConsumer):
             }
             await self.send(text_data=json.dumps(response_data))
     
+    async def send(self, text_data):
+        print("Sending data:", text_data)  # Print what you're sending
+        await super().send(text_data=text_data)      # Call the original send (optional)
     
     async def send_login(self, event):
         print("Send a login")

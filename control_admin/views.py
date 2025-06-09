@@ -51,11 +51,9 @@ def lout(request, client_id):
 
 @api_view(['GET']) 
 def badge(request, client_id, badge_id):
-    print("badging here")
-    print(client_id)
-    print(async_to_sync(get_user_for_badge(badge_id)))
-    username = ""
-    service_provider = ""
+    print(async_to_sync(get_user_for_badge)(badge_id))
+    username = "hello"
+    service_provider = "jesuis"
     
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
