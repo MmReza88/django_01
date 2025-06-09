@@ -1,4 +1,5 @@
 import json
+from park_auth import api_functions
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 #-------------------------------------------------------------------------------------
@@ -23,16 +24,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
             self.client_id = data["client_id"]
             await self.channel_layer.group_add(self.client_id, self.channel_name)
         elif data["type"] == "control_plate":
-            response_data = {
-                "type": "control_plate",
-                "username": "some",
-                "ticket_info": {
-                    "start": 0,
-                    "end": 1748006179,
-                },
-                "last_fines": [1748006179],
-                "last_chalks": [1748006000]
-            }
+            response_data = await api_functions.get_all_info_car(data["plate"], self.service_provider)
             await self.send(text_data=json.dumps(response_data))
     
     async def send(self, text_data):

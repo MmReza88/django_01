@@ -46,14 +46,16 @@ def success(request, client_id):
 
 def lout(request, client_id):
     logout(request)
-    # send logged out to client
     return redirect(reverse('success', args=[client_id]))
 
 @api_view(['GET']) 
 def badge(request, client_id, badge_id):
-    print(async_to_sync(get_user_for_badge)(badge_id))
-    username = "hello"
-    service_provider = "jesuis"
+    badge_infos = async_to_sync(get_user_for_badge)(badge_id)
+    print(badge_infos)
+    username = badge_infos["username"]
+    service_provider = badge_infos["service_provider"]
+    
+    #TODO: Check for errors
     
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(

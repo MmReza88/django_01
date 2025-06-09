@@ -196,17 +196,11 @@ def get_user_for_badge(badge_number):
        
         if not user:
             return {"type": "error", "error": "User not found for the given badge."}
-        group = badge.group
-
-        if not group:
-            return {"type": "error", "error": "No group assigned to this controller."}
-        if group is not None:
-            if group.name != "controller":
-                return {"type": "error", "error": "The user is not a controller."}
-       
+        
+        # only controllers have badges. 
+        
         return {
             "username": user.username,
-            "group": badge.group.name ,
             "service_provider": badge.Service_provider.name if badge.Service_provider else None,
         }
     except Exception as e:
