@@ -192,8 +192,6 @@ def get_user_for_badge(badge_number):
         if not user:
             return {"type": "error", "error": "User not found for the given badge."}
         
-        # only controllers have badges. 
-        
         return {
             "username": user.username,
             "service_provider": badge.Service_provider.name if Badge.Service_provider else None,
@@ -202,6 +200,7 @@ def get_user_for_badge(badge_number):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 #
 # #--------------------------------------------------------------------------------------------------
+# TODO: add the parking name in the response
 @database_sync_to_async
 def get_all_info_car(plate , service_provider):
     from pages.models import Car, User_developed, Fine, Chalk, Ticket ,Service_provider
