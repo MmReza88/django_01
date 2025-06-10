@@ -103,21 +103,33 @@ class Ticket(models.Model):
         return f"Ticket #{self.id} - {str(self.Parking)} - {self.car} (start time : {self.start_time} - stop time : {self.stop_time})" 
 
 class Chalk(models.Model):
-   
-    #maybe the car doesn't have user
-    car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
-    issued_time = models.DateTimeField(auto_now_add=True,null=True)
+    car = models.ForeignKey(Car, on_delete=models.DO_NOTHING, blank=False, null=True)
+    issued_time = models.DateTimeField(auto_now_add=True, null=True)
+    service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.car and self.car.user and self.car.user.service_provider:
+            self.service_provider = self.car.user.service_provider
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Chalk for {self.car} issued at {self.issued_time}"
 
 class Fine(models.Model):
- 
-   #maybe the car doesn't have user (which obligatory should have codice fischale to apply the fine)
-   car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
-   issued_time = models.DateTimeField(auto_now_add=True,null=True)
-   def __str__(self):
-         return f"Fine for {self.car} issued at {self.issued_time}"
+    car = models.ForeignKey(Car, on_delete=models.DO_NOTHING, blank=False, null=True)
+    issued_time = models.DateTimeField(auto_now_add=True, null=True)
+    service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.car and self.car.user and self.car.user.service_provider:
+            self.service_provider = self.car.user.service_provider
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Fine for {self.car} issued at {self.issued_time}"
+
 class Card(models.Model):
     card_number = models.CharField(max_length=64, unique=True, blank=False , null=True)
+
     def __str__(self):
         return self.card_number.capitalize()

@@ -9,17 +9,6 @@ def create_groups(sender, **kwargs):
     for name in groups:
         Group.objects.get_or_create(name=name)
 
-    # # Optional: Add default permissions if needed
-    # # For example, block Customer_admin from User or Card models
-    # card_ct = ContentType.objects.get(app_label='pages', model='card')
-    # user_ct = ContentType.objects.get(app_label='auth', model='user')
-    
-    # # Remove view permissions from Customer_admin
-    # customer_group = Group.objects.get(name='Customer_admin')
-    # customer_group.permissions.remove(
-    #     *Permission.objects.filter(content_type__in=[card_ct, user_ct])
-    # )
-
 class PagesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'pages'
