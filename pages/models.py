@@ -68,7 +68,7 @@ class User_developed(models.Model):
         return self.user.username.capitalize()
 
 
-class badge (models.Model):
+class badge(models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
     badge_number = models.CharField(max_length=64, blank=False, null=False, unique=True)
     Service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=False, null=True)
@@ -107,11 +107,6 @@ class Chalk(models.Model):
     issued_time = models.DateTimeField(auto_now_add=True, null=True)
     service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-        if self.car and self.car.user and self.car.user.service_provider:
-            self.service_provider = self.car.user.service_provider
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return f"Chalk for {self.car} issued at {self.issued_time}"
 
@@ -119,11 +114,6 @@ class Fine(models.Model):
     car = models.ForeignKey(Car, on_delete=models.DO_NOTHING, blank=False, null=True)
     issued_time = models.DateTimeField(auto_now_add=True, null=True)
     service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        if self.car and self.car.user and self.car.user.service_provider:
-            self.service_provider = self.car.user.service_provider
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Fine for {self.car} issued at {self.issued_time}"

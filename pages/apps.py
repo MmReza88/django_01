@@ -2,12 +2,35 @@ from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 
 def create_groups(sender, **kwargs):
-    from django.contrib.contenttypes.models import ContentType
     from django.contrib.auth.models import Group, Permission
-    
-    groups = ['Sys_admin', 'Customer_admin', 'Controller', 'User']
-    for name in groups:
-        Group.objects.get_or_create(name=name)
+    from django.contrib.contenttypes.models import ContentType
+    from pages.models import Badge, Car
+
+    groups_permissions = {
+        "Sys_admin": "__all__",
+        "Customer_admin": {
+            Badge: ["add", "change", "delete", "view"],
+            Car: ["view"],
+        },
+        "Controller": {},
+        "User": {}
+    }
+
+    for name, perms in groups_permissions.items():
+        group, _ = Group.objects.get_or_create(name=name)
+
+        if perms == "__all__":
+            group.permissions.set(Permission.objects.all())
+        else:
+            for model, actions in perms.items():
+                ct = ContentType.objects.get_for_model(model)
+                for action in actions:
+                    codename = f"{action}_{model._meta.model_name}"
+                    try:
+                        permission = Permission.objects.get(codename=codename, content_type=ct)
+                        group.permissions.add(permission)
+                    except Permission.DoesNotExist:
+                        print(f"Missing permission: {codename}")
 
 class PagesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
