@@ -4,7 +4,7 @@ from django.db.models.signals import post_migrate
 def create_groups(sender, **kwargs):
     from django.contrib.auth.models import Group, Permission
     from django.contrib.contenttypes.models import ContentType
-    from pages.models import Badge, Car
+    from .models import Badge, Car, User_developed, Service_provider, Chalk, City, Fine, Ticket, Totem, Zone, Parking
     
     #TODO: add all permissions for all models
     groups_permissions = {

@@ -9,7 +9,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from park_auth.api_functions import get_user_for_badge
 
-def lin(request, client_id):# TODO: check if it is a controller and get his service_provider
+# TODO: When an admin is logged in, propose to choose a controller to impersonnate, filter by Service Provider if he is a Custommer_Admin
+def lin(request, client_id):
     service_provider = "some_random_service_provider"
     def send_uname():
         channel_layer = get_channel_layer()

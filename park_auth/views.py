@@ -8,7 +8,7 @@ from asgiref.sync import async_to_sync
 
 # TODO: add a register page -> do not add any service provider
 # TODO: add a page to manage the users cars
-
+# TODO: When an admin is logged in, propose to choose a controller to impersonnate, filter by Service Provider if he is a Custommer_Admin
 def lin(request, client_id):    
     def send_uname():
         channel_layer = get_channel_layer()
