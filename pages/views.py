@@ -7,6 +7,7 @@ import park_auth.api_functions as api
 from pages.models import Totem
 from pages.models import Ticket
 from pages.models import Service_provider
+from pages.models import Controller
 from django.shortcuts import render
 from qrcode.constants import ERROR_CORRECT_L
 
@@ -119,6 +120,7 @@ def get_all_info_car(request, plate , service_provider):
     return Response(async_to_sync(api.get_all_info_car)(plate, service_provider))
 
 
+#--------------------------------------------------------------------------------------------------------------
 
 
     

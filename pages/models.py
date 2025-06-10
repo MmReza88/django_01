@@ -124,3 +124,10 @@ class Card(models.Model):
     card_number = models.CharField(max_length=64, unique=True, blank=False , null=True)
     def __str__(self):
         return self.card_number.capitalize()
+    
+#-------------------------------------------------------------------------------------------------------------------
+class Controller (models.Model):
+    identity_code = models.IntegerField(unique=True ,null=True,blank=False) 
+    
+    def __str__(self):
+        return f"Controller {self.identity_code}"

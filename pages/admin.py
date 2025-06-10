@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service_provider , City ,Zone , Parking , Totem, Ticket, User_developed, Car, Fine, Chalk , Card , badge
+from .models import Service_provider , City ,Zone , Parking , Totem, Ticket, User_developed, Car, Fine, Chalk , Card , badge , Controller
 
 """
 class Service_providerAdmin(admin.ModelAdmin):
@@ -35,7 +35,7 @@ admin.site.register(Totem)#,TotemAdmin)
 admin.site.register(Ticket)#,TicketAdmin)
 admin.site.register(Card)#,FineAdmin)
 admin.site.register(badge)#,CardAdmin)
-
+admin.site.register(Controller)#,ControllerAdmin)
 
 admin.site.register(User_developed)#,User_developedAdmin)
 admin.site.register(Car)#,CarAdmin)
