@@ -20,7 +20,7 @@ class BadgeAdmin(admin.ModelAdmin):
             try:
                 obj.Service_provider = request.user.user_developed.service_provider
             except User_developed.DoesNotExist:
-                pass
+                pass # do nothing if the ca does not have any service provider
         super().save_model(request, obj, form, change)
 
     def has_change_permission(self, request, obj=None):
