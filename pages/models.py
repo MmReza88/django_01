@@ -14,7 +14,6 @@ class City (models.Model):              #Service provider define => totem can ge
       return self.name.capitalize()
 
 class Zone (models.Model):
-    
     name = models.CharField (unique=True ,max_length=64, blank=False)
    
     city = models.ForeignKey(City ,on_delete=models.DO_NOTHING, blank=False , null=True)
@@ -36,7 +35,6 @@ class Zone (models.Model):
 
 
 class Parking (models.Model):
-    
     address= models.CharField(max_length=64, unique=True, blank=False)
     zone = models.ForeignKey(Zone ,on_delete=models.DO_NOTHING, blank=False , null=True)
     #id = models.IntegerField(unique=True, blank=False , null=True) 
@@ -61,22 +59,22 @@ class Totem(models.Model):
 #-------------------------------------------------------------------------------------------------------------------
 
 # Connect a user to a company
-class User_developed (models.Model):
-    user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
+class User_developed(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, blank=False, null=True)
     codice_fiscale = models.CharField(max_length=64)
-   
+    service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, null=True, blank=True)
+
     def __str__(self):
         return self.user.username.capitalize()
 
 
-class badge (models.Model):
+class Badge(models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
-    badge_number = models.CharField(max_length=64, blank=False, null=True)
-    group = models.ForeignKey(Group, on_delete=models.DO_NOTHING, blank=False, null=False)
+    badge_number = models.CharField(max_length=64, blank=False, null=False, unique=True)
     Service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=False, null=True)
     
     def __str__(self):
-        return self.user.username.capitalize()
+        return self.badge_number + " : " + self.user.username.capitalize()
 
 
 class Car(models.Model):
@@ -86,7 +84,6 @@ class Car(models.Model):
         return self.plate_number.capitalize()  
     
 class Ticket(models.Model):
-    
     start_time = models.DateTimeField(null=True)
     stop_time = models.DateTimeField(null=True)
 
@@ -106,28 +103,23 @@ class Ticket(models.Model):
         return f"Ticket #{self.id} - {str(self.Parking)} - {self.car} (start time : {self.start_time} - stop time : {self.stop_time})" 
 
 class Chalk(models.Model):
-   
-    #maybe the car doesn't have user
-    car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
-    issued_time = models.DateTimeField(auto_now_add=True,null=True)
+    car = models.ForeignKey(Car, on_delete=models.DO_NOTHING, blank=False, null=True)
+    issued_time = models.DateTimeField(auto_now_add=True, null=True)
+    service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=True, null=True)
+
     def __str__(self):
         return f"Chalk for {self.car} issued at {self.issued_time}"
 
 class Fine(models.Model):
- 
-   #maybe the car doesn't have user (which obligatory should have codice fischale to apply the fine)
-   car = models.ForeignKey(Car,on_delete=models.DO_NOTHING, blank=False, null=True)
-   issued_time = models.DateTimeField(auto_now_add=True,null=True)
-   def __str__(self):
-         return f"Fine for {self.car} issued at {self.issued_time}"
+    car = models.ForeignKey(Car, on_delete=models.DO_NOTHING, blank=False, null=True)
+    issued_time = models.DateTimeField(auto_now_add=True, null=True)
+    service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=True, null=True)
+
+    def __str__(self):
+        return f"Fine for {self.car} issued at {self.issued_time}"
+
 class Card(models.Model):
     card_number = models.CharField(max_length=64, unique=True, blank=False , null=True)
+
     def __str__(self):
         return self.card_number.capitalize()
-    
-#-------------------------------------------------------------------------------------------------------------------
-class Controller (models.Model):
-    identity_code = models.IntegerField(unique=True ,null=True,blank=False) 
-    
-    def __str__(self):
-        return f"Controller {self.identity_code}"

@@ -6,6 +6,9 @@ from django.contrib import messages
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+# TODO: add a register page -> do not add any service provider
+# TODO: add a page to manage the users cars
+# TODO: When an admin is logged in, propose to choose a controller to impersonnate, filter by Service Provider if he is a Custommer_Admin
 def lin(request, client_id):    
     def send_uname():
         channel_layer = get_channel_layer()
@@ -43,22 +46,3 @@ def lout(request, client_id):
     logout(request)
     # send logged out to client
     return redirect(reverse('success', args=[client_id]))
-
-
-
-# def your_view(request):
-#     # 🔒 Hardcoded client ID and message
-#     user_id = "client123"
-#     message = "Hello, this is a message from Django view!"
-
-#     channel_layer = get_channel_layer()
-
-#     async_to_sync(channel_layer.group_send)(
-#         user_id,
-#         {
-#             "type": "send_message",  # this matches a method name in your consumer
-#             "message": message,
-#         }
-#     )
-
-#     return JsonResponse({"status": f"Message sent to {user_id}"})

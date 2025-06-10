@@ -9,7 +9,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from park_auth.api_functions import get_user_for_badge
 
-def lin(request, client_id):# TODO: check if it is a controller and get his service_provider
+# TODO: When an admin is logged in, propose to choose a controller to impersonnate, filter by Service Provider if he is a Custommer_Admin
+def lin(request, client_id):
     service_provider = "some_random_service_provider"
     def send_uname():
         channel_layer = get_channel_layer()
@@ -46,16 +47,16 @@ def success(request, client_id):
 
 def lout(request, client_id):
     logout(request)
-    # send logged out to client
     return redirect(reverse('success', args=[client_id]))
 
 @api_view(['GET']) 
 def badge(request, client_id, badge_id):
-    print("badging here")
-    print(client_id)
-    print(async_to_sync(get_user_for_badge(badge_id)))
-    username = ""
-    service_provider = ""
+    badge_infos = async_to_sync(get_user_for_badge)(badge_id)
+    print(badge_infos)
+    username = badge_infos["username"]
+    service_provider = badge_infos["service_provider"]
+    
+    #TODO: Check for errors
     
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(

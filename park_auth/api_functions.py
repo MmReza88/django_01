@@ -59,7 +59,7 @@ def get_user_cars(username):
 # #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
 def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
-    from pages.models import Totem, Car, Ticket, Card
+    from pages.models import Totem, Car, Ticket
     from django.utils import timezone
 
     try:
@@ -90,11 +90,6 @@ def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
         duration = int(duration)
     except ValueError:
         return {"type": "error", "error": "Invalid duration format."}
-
-    # try:
-    #     card = Card.objects.get(card_number=card_number)
-    # except Card.DoesNotExist:
-    #     return {"type": "error", "error": "Card does not exist."}
 
     try:
         # Get the last ticket for this car and parking, regardless of active/inactive
@@ -185,34 +180,27 @@ def get_car_parking_status(plate):
 
 @database_sync_to_async
 def get_user_for_badge(badge_number):
-    from pages.models import badge, User
+    from pages.models import Badge, User
 
     try:
-        badge = badge.objects.get(badge_number=badge_number)
-    except badge.DoesNotExist:
+        badge = Badge.objects.get(badge_number=badge_number)
+    except Badge.DoesNotExist:
         return {"type": "error", "error": "No controller has been assigned for this badge."}
     try:
         user = badge.user
        
         if not user:
             return {"type": "error", "error": "User not found for the given badge."}
-        group = badge.group
-
-        if not group:
-            return {"type": "error", "error": "No group assigned to this controller."}
-        if group is not None:
-            if group.name != "controller":
-                return {"type": "error", "error": "The user is not a controller."}
-       
+        
         return {
             "username": user.username,
-            "group": badge.group.name ,
-            "service_provider": badge.Service_provider.name if badge.Service_provider else None,
+            "service_provider": badge.Service_provider.name if Badge.Service_provider else None,
         }
     except Exception as e:
         return {"type": "error", "error": f"Server error: {str(e)}"}
 #
 # #--------------------------------------------------------------------------------------------------
+# TODO: add the parking name in the response
 @database_sync_to_async
 def get_all_info_car(plate , service_provider):
     from pages.models import Car, User_developed, Fine, Chalk, Ticket ,Service_provider
@@ -220,8 +208,6 @@ def get_all_info_car(plate , service_provider):
 
     try:
         car = Car.objects.get(plate_number=plate.upper()) 
-        user_developed = car.user
-        username = user_developed.user.username if user_developed else None
 
         tickets = Ticket.objects.filter(car=car).order_by('-start_time').first()
         if tickets:
@@ -255,7 +241,6 @@ def get_all_info_car(plate , service_provider):
         return {
             "type": "control_plate",
             "plate": car.plate_number,
-            "username": username,
             "ticket": ticket_data,
             "last_fines": last_fines,
             "last_chalks": last_chalks,
@@ -264,14 +249,13 @@ def get_all_info_car(plate , service_provider):
     except Car.DoesNotExist:
         return {
             "type": "control_plate",
-            "plate": None,
-            "username": None,
+            "plate": plate,
             "ticket": {
-                "start_time": None,
-                "stop_time": None,
+                "start_time": 0,
+                "stop_time": 0,
             },
-            "last_fines": None,
-            "last_chalks": None,
+            "last_fines": [],
+            "last_chalks": [],
         }    
         
         
@@ -280,3 +264,12 @@ def get_all_info_car(plate , service_provider):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 
     #--------------------------------------------------------------------------------------------------
+    
+# TODO: create a function to emit a fine -> returns get_all_info_car(plate , service_provider)
+# @database_sync_to_async
+# def emit_fine(plate, service_provider):
+
+
+# TODO: create a function to emit a chalk -> returns get_all_info_car(plate , service_provider)
+# @database_sync_to_async
+# def emit_chalk(plate, service_provider):
