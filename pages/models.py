@@ -68,7 +68,7 @@ class User_developed(models.Model):
         return self.user.username.capitalize()
 
 
-class badge(models.Model):
+class Badge(models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING, blank=False, null=True)
     badge_number = models.CharField(max_length=64, blank=False, null=False, unique=True)
     Service_provider = models.ForeignKey(Service_provider, on_delete=models.DO_NOTHING, blank=False, null=True)

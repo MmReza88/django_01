@@ -20,7 +20,6 @@ from django.urls import reverse
 @api_view(['GET']) 
 def start_card(request, totem_id, secret_token, card_info):
     
-    #TODO: Check it the secret_token is valid for the totem_id
     try:
         numeric_id = totem_id.split('_')[1]
         totem = Totem.objects.select_related("parking__zone").get(identity_code=numeric_id)

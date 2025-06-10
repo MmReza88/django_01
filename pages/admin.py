@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service_provider , City ,Zone , Parking , Totem, Ticket, User_developed, Car, Fine, Chalk , Card , badge
+from .models import Service_provider , City ,Zone , Parking , Totem, Ticket, User_developed, Car, Fine, Chalk , Card , Badge
 
 """
 class Service_providerAdmin(admin.ModelAdmin):
@@ -34,18 +34,18 @@ class ChalkAdmin (admin.ModelAdmin):
 # admin.site.register(Totem)#,TotemAdmin)
 # admin.site.register(Ticket)#,TicketAdmin)
 # admin.site.register(Card)#,FineAdmin)
-# admin.site.register(badge)#,CardAdmin)
+# admin.site.register(Badge)#,CardAdmin)
 
 
 # admin.site.register(User_developed)#,User_developedAdmin)
 # admin.site.register(Car)#,CarAdmin)
 # admin.site.register(Fine)#,FineAdmin)
 # admin.site.register(Chalk)#,ChalkAdmin)
-
+# TODO: remove all above
 from django.contrib import admin
-from .models import badge, Car, User_developed
+from .models import Badge, Car, User_developed
 from django.contrib.auth.models import Group
-
+# TODO: create all classes to filter out what the CA can see or not
 class BadgeAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -83,7 +83,7 @@ class CarAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request)
 
-admin.site.register(badge, BadgeAdmin)
+admin.site.register(Badge, BadgeAdmin)
 admin.site.register(Car, CarAdmin)
 
 
