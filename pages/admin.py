@@ -39,10 +39,8 @@ class CarAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request)
 
-admin.site.register(Badge, BadgeAdmin)
-admin.site.register(Car, CarAdmin)
-
-
+admin.site.register(Badge)
+admin.site.register(Car)
 admin.site.register(Service_provider)
 admin.site.register(City)
 admin.site.register(Zone)
