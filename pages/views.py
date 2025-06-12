@@ -7,7 +7,6 @@ import park_auth.api_functions as api
 from pages.models import Totem
 from pages.models import Ticket
 from pages.models import Service_provider
-from pages.models import Controller
 from django.shortcuts import render
 from qrcode.constants import ERROR_CORRECT_L
 
