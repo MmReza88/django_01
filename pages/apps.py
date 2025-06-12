@@ -2,7 +2,7 @@ from django.apps import AppConfig
 from django.db.models.signals import post_migrate
 
 def create_groups(sender, **kwargs):
-    from django.contrib.auth.models import Group, Permission
+    from django.contrib.auth.models import Group, Permission, User
     from django.contrib.contenttypes.models import ContentType
     from .models import Badge, Car, User_developed, Service_provider, Chalk, City, Fine, Ticket, Totem, Zone, Parking
     
@@ -19,7 +19,8 @@ def create_groups(sender, **kwargs):
             Totem: ["add", "change", "delete", "view"],
             Parking: ["add", "change", "delete", "view"],
             Zone: ["add", "change", "delete", "view"],
-            City: ["add", "view"]
+            City: ["add", "view"],
+            User: ["change", "view"],
         },
         "Controller": {},
         "User": {}
