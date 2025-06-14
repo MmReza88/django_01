@@ -23,23 +23,25 @@ class BadgeAdmin(admin.ModelAdmin):
                 pass # do nothing if the ca does not have any service provider
         super().save_model(request, obj, form, change)
 
-    def has_change_permission(self, request, obj=None):
-        if request.user.groups.filter(name="Customer_admin").exists():
-            if obj and obj.Service_provider != request.user.user_developed.service_provider:
-                return False
-        return super().has_change_permission(request, obj)
+class FineAdmin(admin.ModelAdmin):
+    pass
 
-    def has_delete_permission(self, request, obj=None):
-        return self.has_change_permission(request, obj)
+class ChalkAdmin(admin.ModelAdmin):
+    pass
 
-    def has_add_permission(self, request):
-        return request.user.groups.filter(name="Customer_admin").exists() or super().has_add_permission(request)
+class TicketAdmin(admin.ModelAdmin):
+    pass
 
-class CarAdmin(admin.ModelAdmin):
-    def get_queryset(self, request):
-        return super().get_queryset(request)
+class ZoneAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(Badge)
+class ParkingAdmin(admin.ModelAdmin):
+    pass
+
+class TotemAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Badge, BadgeAdmin)
 admin.site.register(Car)
 admin.site.register(Service_provider)
 admin.site.register(City)

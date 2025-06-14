@@ -14,7 +14,6 @@ def create_groups(sender, **kwargs):
             Car: ["view", "add"],
             Fine: ["add", "change", "delete", "view"],
             Chalk: ["add", "change", "delete", "view"],
-            User_developed: ["change", "view"],# TODO: change this into changing automaticly the service provider.
             Ticket: ["add", "change", "delete", "view"],
             Totem: ["add", "change", "delete", "view"],
             Parking: ["add", "change", "delete", "view"],
