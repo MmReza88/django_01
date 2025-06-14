@@ -6,7 +6,6 @@ def create_groups(sender, **kwargs):
     from django.contrib.contenttypes.models import ContentType
     from .models import Badge, Car, User_developed, Service_provider, Chalk, City, Fine, Ticket, Totem, Zone, Parking
     
-    #TODO: add all permissions for all models
     groups_permissions = {
         "Sys_admin": "__all__",
         "Customer_admin": {

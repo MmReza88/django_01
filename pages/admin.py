@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import Badge, Car, User_developed, Service_provider, Chalk, City, Fine, Ticket, Totem, Zone, Parking
-from django.contrib.auth.models import Group
-# TODO: create all classes to filter out what the CA can see or not
+from django.contrib.auth.models import Group, User
+from django.db.models import Q
+
+
 class BadgeAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -77,6 +80,19 @@ class TicketAdmin(admin.ModelAdmin):
             except User_developed.DoesNotExist:
                 return qs.none()
         return qs
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        user = request.user
+        if user.groups.filter(name="Customer_admin").exists():
+            try:
+                sp = user.user_developed.service_provider
+                if db_field.name == "Parking":
+                    kwargs["queryset"] = Parking.objects.filter(zone__service_provider=sp)
+
+            except User_developed.DoesNotExist:
+                kwargs["queryset"] = Parking.objects.none() if db_field.name == "Parking" else Car.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class ZoneAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
@@ -111,6 +127,18 @@ class ParkingAdmin(admin.ModelAdmin):
             except User_developed.DoesNotExist:
                 return qs.none()
         return qs
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        user = request.user
+
+        if db_field.name == "zone" and user.groups.filter(name="Customer_admin").exists():
+            try:
+                sp = user.user_developed.service_provider
+                kwargs["queryset"] = Zone.objects.filter(service_provider=sp)
+            except User_developed.DoesNotExist:
+                kwargs["queryset"] = Zone.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class TotemAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
@@ -124,6 +152,54 @@ class TotemAdmin(admin.ModelAdmin):
             except User_developed.DoesNotExist:
                 return qs.none()
         return qs
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        user = request.user
+
+        if db_field.name == "parking" and user.groups.filter(name="Customer_admin").exists():
+            try:
+                sp = user.user_developed.service_provider
+                kwargs["queryset"] = Parking.objects.filter(zone__service_provider=sp)
+            except User_developed.DoesNotExist:
+                kwargs["queryset"] = Parking.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
+
+class CustomUserAdmin(UserAdmin):
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        user = request.user
+
+        if user.groups.filter(name="Customer_admin").exists():
+            try:
+                sp = user.user_developed.service_provider
+
+                return qs.filter(
+                    Q(groups__name="user") |
+                    Q(groups__name__in=["controller", "Customer_admin"],
+                      user_developed__service_provider=sp)
+                ).distinct()
+
+            except User_developed.DoesNotExist:
+                return qs.none()
+
+        return qs
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        if request.user.groups.filter(name="Customer_admin").exists():
+            try:
+                sp = request.user.user_developed.service_provider
+                user_dev, _ = User_developed.objects.get_or_create(user=obj)
+                user_dev.service_provider = sp
+                user_dev.save()
+            except User_developed.DoesNotExist:
+                pass
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 
 admin.site.register(Badge, BadgeAdmin)
 admin.site.register(Car)
@@ -136,3 +212,7 @@ admin.site.register(Ticket, TicketAdmin)
 admin.site.register(User_developed)
 admin.site.register(Fine, FineAdmin)
 admin.site.register(Chalk, ChalkAdmin)
+
+# TODO: when asignling a badge only show the controllers
+# TODO: filter the users for c_a
+# TODO: filter les autres form field from ilegal options
