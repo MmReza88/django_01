@@ -25,6 +25,20 @@ class BadgeAdmin(admin.ModelAdmin):
             except User_developed.DoesNotExist:
                 pass # do nothing if the ca does not have any service provider
         super().save_model(request, obj, form, change)
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user" and request.user.groups.filter(name="Customer_admin").exists():
+            try:
+                sp = request.user.user_developed.service_provider
+                controller_users = User.objects.filter(
+                    groups__name="Controller",
+                    user_developed__service_provider=sp
+                )
+                kwargs["queryset"] = controller_users
+            except User_developed.DoesNotExist:
+                kwargs["queryset"] = User.objects.none()
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class FineAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
@@ -176,8 +190,8 @@ class CustomUserAdmin(UserAdmin):
                 sp = user.user_developed.service_provider
 
                 return qs.filter(
-                    Q(groups__name="user") |
-                    Q(groups__name__in=["controller", "Customer_admin"],
+                    Q(groups__name="User") |
+                    Q(groups__name__in=["Controller", "Customer_admin"],
                       user_developed__service_provider=sp)
                 ).distinct()
 
@@ -197,6 +211,13 @@ class CustomUserAdmin(UserAdmin):
                 user_dev.save()
             except User_developed.DoesNotExist:
                 pass
+            
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "groups" and request.user.groups.filter(name="Customer_admin").exists():
+            allowed_groups = Group.objects.filter(name__in=["Customer_admin", "Controller", "User"])
+            kwargs["queryset"] = allowed_groups
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
@@ -215,4 +236,3 @@ admin.site.register(Chalk, ChalkAdmin)
 
 # TODO: when asignling a badge only show the controllers
 # TODO: filter the users for c_a
-# TODO: filter les autres form field from ilegal options
