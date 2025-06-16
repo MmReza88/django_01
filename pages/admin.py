@@ -233,6 +233,3 @@ admin.site.register(Ticket, TicketAdmin)
 admin.site.register(User_developed)
 admin.site.register(Fine, FineAdmin)
 admin.site.register(Chalk, ChalkAdmin)
-
-# TODO: when asignling a badge only show the controllers
-# TODO: filter the users for c_a
