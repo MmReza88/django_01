@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Cars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 5vh auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .car-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .car-row form {
+            margin: 0;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            width: 70%;
+            font-size: 1rem;
+        }
+
+        input[type="submit"],
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .add-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .messages {
+            color: green;
+            margin-bottom: 1rem;
+        }
+
+        .errorlist {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Your Cars</h1>
+
+        {% for message in messages %}
+        <p class="messages">{{ message }}</p>
+        {% endfor %}
+
+        {% if cars %}
+        {% for car in cars %}
+        <div class="car-row">
+            <span>{{ car.plate_number }}</span>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="car_id" value="{{ car.id }}">
+                <input type="submit" name="delete_car" value="Remove">
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No cars registered.</p>
+        {% endif %}
+
+        <h2>Add a New Car</h2>
+        <form method="post" class="add-form">
+            {% csrf_token %}
+            <input type="text" name="plate_number" placeholder="Enter plate number" required>
+            <input type="submit" name="add_car" value="Add Car">
+        </form>
+        <form method="post" action="{% url 'logout' 'default' %}" style="text-align: right;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</body>
+
+</html>
