@@ -26,10 +26,20 @@ class MessageConsumer(AsyncWebsocketConsumer):
         elif data["type"] == "control_plate":
             response_data = await api_functions.get_all_info_car(data["plate"], self.service_provider)
             await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "emit_fine":
+            await api_functions.emit_fine(data["plate"], self.service_provider)
+            response_data = await api_functions.get_all_info_car(data["plate"], self.service_provider)
+            await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "emit_chalk":
+            await api_functions.emit_chalk(data["plate"], self.service_provider)
+            response_data = await api_functions.get_all_info_car(data["plate"], self.service_provider)
+            await self.send(text_data=json.dumps(response_data))
+            
+
     
     async def send(self, text_data):
-        print("Sending data:", text_data)  # Print what you're sending
-        await super().send(text_data=text_data)      # Call the original send (optional)
+        print("Sending data:", text_data)
+        await super().send(text_data=text_data)
     
     async def send_login(self, event):
         print("Send a login")

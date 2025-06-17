@@ -225,7 +225,6 @@ def get_user_for_badge(badge_number):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 #
 # #--------------------------------------------------------------------------------------------------
-# TODO: add the parking name in the response
 @database_sync_to_async
 def get_all_info_car(plate , service_provider):
     from pages.models import Car, User_developed, Fine, Chalk, Ticket ,Service_provider
@@ -299,11 +298,50 @@ def get_all_info_car(plate , service_provider):
 
     #--------------------------------------------------------------------------------------------------
     
-# TODO: create a function to emit a fine -> returns get_all_info_car(plate , service_provider)
-# @database_sync_to_async
-# def emit_fine(plate, service_provider):
+@database_sync_to_async
+def emit_fine(plate, service_provider):
+    from pages.models import Fine, Car, Service_provider
+    
+    # Get or create the car
+    car, _ = Car.objects.get_or_create(
+        plate_number=plate.upper(),  # Normalize plate to uppercase
+        defaults={'user': None}  # or specify default user if needed
+    )
+
+    # Get the service provider (must exist)
+    try:
+        service_provider = Service_provider.objects.get(name__iexact=service_provider)
+    except Service_provider.DoesNotExist:
+        raise ValueError(f"No service provider found with name '{service_provider}'")
+
+    # Create the fine
+    fine = Fine.objects.create(
+        car=car,
+        issued_time=timezone.now(),
+        service_provider=service_provider
+    )
+    
 
 
-# TODO: create a function to emit a chalk -> returns get_all_info_car(plate , service_provider)
-# @database_sync_to_async
-# def emit_chalk(plate, service_provider):
+@database_sync_to_async
+def emit_chalk(plate, service_provider):
+    from pages.models import Chalk, Car, Service_provider
+    
+    # Get or create the car
+    car, _ = Car.objects.get_or_create(
+        plate_number=plate.upper(),  # Normalize plate to uppercase
+        defaults={'user': None}  # or specify default user if needed
+    )
+
+    # Get the service provider (must exist)
+    try:
+        service_provider = Service_provider.objects.get(name__iexact=service_provider)
+    except Service_provider.DoesNotExist:
+        raise ValueError(f"No service provider found with name '{service_provider}'")
+
+    # Create the fine
+    chalk = Chalk.objects.create(
+        car=car,
+        issued_time=timezone.now(),
+        service_provider=service_provider
+    )
