@@ -49,11 +49,17 @@ class MessageConsumer(AsyncWebsocketConsumer):
             token = data["token"]
             response_data = await api_functions.new_ticket(duration, price, totem_id, token, plate, self.card)
             await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "web_create_new_ticket":
+            duration = data["duration"]
+            price = data["price"]
+            plate = data["plate"]
+            parking = data["parking_name"]
+            response_data = await api_functions.new_ticket(duration, price, "", "", plate, self.card, is_web=True, parking_name=parking)
+            await self.send(text_data=json.dumps(response_data))
         elif data["type"] == "get_car_parcking_status":
             plate = data["plate"]
             response_data = await api_functions.get_car_parking_status(plate)
             await self.send(text_data=json.dumps(response_data))
-
 
         else:
             response_data = {

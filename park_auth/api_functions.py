@@ -79,26 +79,30 @@ def get_user_cars(username):
 
 # #--------------------------------------------------------------------------------------------------
 @database_sync_to_async
-def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
-    from pages.models import Totem, Car, Ticket
+def new_ticket(duration, price, totem_id, secret_token, plate, card_number, is_web=False, parking_name=""):
+    from pages.models import Totem, Car, Ticket, Parking
     from django.utils import timezone
+    
+    parking = None
+    if not is_web:
+        try:
+            totem_pk = int(totem_id.split('_')[1])
+        except (IndexError, ValueError):
+            return {"type": "error", "error": "Invalid totem_id format."}
 
-    try:
-        totem_pk = int(totem_id.split('_')[1])
-    except (IndexError, ValueError):
-        return {"type": "error", "error": "Invalid totem_id format."}
+        try:
+            totem = Totem.objects.get(identity_code=totem_pk)
+        except Totem.DoesNotExist:
+            return {"type": "error", "error": "Totem does not exist."}
 
-    try:
-        totem = Totem.objects.get(identity_code=totem_pk)
-    except Totem.DoesNotExist:
-        return {"type": "error", "error": "Totem does not exist."}
+        if totem.secret_token != secret_token:
+            return {"type": "error", "error": "Invalid secret token."}
 
-    if totem.secret_token != secret_token:
-        return {"type": "error", "error": "Invalid secret token."}
-
-    Parking = totem.parking
-    if Parking is None:
-        return {"type": "error", "error": "Parking not found."}
+        parking = totem.parking
+        if parking is None:
+            return {"type": "error", "error": "Parking not found."}
+    else: 
+        parking = Parking.objects.get(address=parking_name)
 
     car, _ = Car.objects.get_or_create(plate_number=plate.upper())
 
@@ -116,7 +120,7 @@ def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
         # Get the last ticket for this car and parking, regardless of active/inactive
         last_ticket = Ticket.objects.filter(
             car=car,
-            Parking=Parking
+            Parking=parking
         ).order_by('-stop_time').first()
     
         # Determine base time
@@ -133,13 +137,13 @@ def new_ticket(duration, price, totem_id, secret_token, plate, card_number):
             start_time=new_start_time,
             stop_time=new_stop_time,
             price=price,
-            Parking=Parking,
+            Parking=parking,
             car=car,
             card_number=card_number,
         )
         last_ticket = Ticket.objects.filter(
             car=car,
-            Parking=Parking
+            Parking=parking
         ).order_by('-stop_time').first()
 
         return {
