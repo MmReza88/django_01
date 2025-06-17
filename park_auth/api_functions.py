@@ -230,29 +230,36 @@ def get_user_for_badge(badge_number):
 def get_all_info_car(plate , service_provider):
     from pages.models import Car, User_developed, Fine, Chalk, Ticket ,Service_provider
     from django.utils import timezone
-
+    
+    parking_name = ""
+    ticket_data = {
+        "start_time": 0,
+        "stop_time": 0,
+    }
     try:
         car = Car.objects.get(plate_number=plate.upper()) 
 
-        tickets = Ticket.objects.filter(car=car).order_by('-start_time').first()
-        if tickets:
-            if tickets.Parking.zone.service_provider.name != service_provider:
+        ticket = Ticket.objects.filter(car=car).order_by('-start_time').first()
+        if ticket:
+            if ticket.Parking.zone.service_provider.name != service_provider:
                 return {
-                    "type": "error",
-                    "error": "wrong service provider.",
-                    "ticket service provider": tickets.Parking.zone.service_provider.name,
-                    "requested service provider": service_provider,
+                    "type": "control_plate",
+                    "plate": plate,
+                    "parking_name": "",
+                    "ticket": {
+                        "start_time": 0,
+                        "stop_time": 0,
+                    },
+                    "last_fines": [],
+                    "last_chalks": [],
                 }
+            
             ticket_data = {
-                "start_time": max(0, int(tickets.start_time.timestamp())) if tickets.start_time else 0,
-                "stop_time": max(0, int(tickets.stop_time.timestamp())) if tickets.stop_time else 0,
+                "start_time": max(0, int(ticket.start_time.timestamp())) if ticket.start_time else 0,
+                "stop_time": max(0, int(ticket.stop_time.timestamp())) if ticket.stop_time else 0,
             }
-        else:
-            ticket_data = {
-                "start_time": 0,
-                "stop_time": 0,
-            }
-
+            parking_name = ticket.Parking.address
+        
         fines = Fine.objects.filter(car=car).order_by('-issued_time')[:3]
         last_fines = [
             int(f.issued_time.timestamp()) for f in fines if f.issued_time
@@ -266,6 +273,7 @@ def get_all_info_car(plate , service_provider):
         return {
             "type": "control_plate",
             "plate": car.plate_number,
+            "parking_name": parking_name,
             "ticket": ticket_data,
             "last_fines": last_fines,
             "last_chalks": last_chalks,
@@ -275,6 +283,7 @@ def get_all_info_car(plate , service_provider):
         return {
             "type": "control_plate",
             "plate": plate,
+            "parking_name": "",
             "ticket": {
                 "start_time": 0,
                 "stop_time": 0,
