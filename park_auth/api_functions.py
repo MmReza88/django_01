@@ -32,6 +32,27 @@ def get_totem_infos(totem_id):
         return {"type": "error", "error": f"Server error: {str(e)}"}
 #-----------------------------------------------------------------------------------
 @database_sync_to_async
+def get_all_parkings():
+    from pages.models import Parking
+    
+    parking_names = list(Parking.objects.values_list('address', flat=True))
+    return {"type": "all_parking_names", "all_parking_names": parking_names}
+
+@database_sync_to_async
+def get_parking_infos(parking_name):
+    from pages.models import Parking
+
+    parking = Parking.objects.get(address=parking_name)
+    
+    price_list = [int(num) for num in parking.zone.prices.split(',')]
+    durations_list = [int(num) for num in parking.zone.durations.split(',')]
+    
+    return{"type": "parking_data", "parking_name": parking_name, "durations": durations_list, "prices": price_list}
+
+    
+
+#-----------------------------------------------------------------------------------
+@database_sync_to_async
 def get_user_cars(username):
     from pages.models import Car, User_developed, User
 

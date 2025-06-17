@@ -20,10 +20,19 @@ class MessageConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         print(f"Decoded totem data : {data}")
-
+    
         if data["type"] == "set_client_id":
             self.client_id = data["client_id"]
             await self.channel_layer.group_add(self.client_id, self.channel_name)
+        elif data["type"] == "get_all_parkings":
+            response_data = await api_functions.get_all_parkings()
+            await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "get_parking_infos":
+            parking_name = data["parking_name"]
+            response_data = await api_functions.get_parking_infos(parking_name)
+            await self.send(text_data=json.dumps(response_data))
+        elif data["type"] == "start_card":
+            self.card = data["card"]
         elif data["type"] == "get_totem_infos":
             totem_id = data["totem_id"]
             response_data = await api_functions.get_totem_infos(totem_id)

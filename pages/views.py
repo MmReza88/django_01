@@ -119,6 +119,11 @@ def get_all_info_car(request, plate , service_provider):
 
 
 #--------------------------------------------------------------------------------------------------------------
+@api_view(['GET'])
+def get_all_parkings(request):
+    return Response(async_to_sync(api.get_all_parkings)())
 
-
+@api_view(["GET"])
+def get_parking_infos(request, parking_name):
+    return Response(async_to_sync(api.get_parking_infos)(parking_name))
     
