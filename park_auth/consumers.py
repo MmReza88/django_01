@@ -77,3 +77,8 @@ class MessageConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "start",
         }))
+    
+    async def send(self, text_data):
+        print("Sending data:", text_data)  # Print what you're sending
+        await super().send(text_data=text_data)      # Call the original send (optional)
+
