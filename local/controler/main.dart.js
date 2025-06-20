@@ -55307,7 +55307,7 @@ A.UP.prototype={
 $1(a){return B.H7},
 $S:362}
 A.a61.prototype={
-$1(a){var s=new A.hA("ws://localhost:8000/ws/control/")
+$1(a){var s=new A.hA("ws://192.168.30.224:8000/ws/control/")
 s.c=A.uy(!1,t.a)
 s.Uy()
 return s},
@@ -55348,7 +55348,7 @@ l(){var s=this.d
 if(s!=null)s.aN(0)
 this.aE()},
 M(a){var s=null,r=A.bT(a,s,t.w).w.a.b,q=t.R,p=0.09259259259259259*r
-return A.nT(B.b3,A.a([A.ku(A.a6J(A.a([A.d5("Scan the QR code to log in.",A.ck(s,s,B.k,s,B.e,s,s,s,s,s,s,0.05555555555555555*r,s,s,B.aJ,s,s,!0,s,s,s,s,s,s,s,s),B.el),B.J8,new A.tw("http://localhost:8000/ctrl/login/controler_123",4*r/5,s)],q),B.ay,B.dR,B.bR),s,s),A.km(A.a([A.jb(B.dA,B.i,s,p),A.fJ(s,s,0.007407407407407408*r),A.d5("Back",A.ck(s,s,B.i,s,s,s,s,s,s,s,s,p,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s)],q),B.dU,!1,!1,!0,new A.a3j(a))],q),B.c4)}}
+return A.nT(B.b3,A.a([A.ku(A.a6J(A.a([A.d5("Scan the QR code to log in.",A.ck(s,s,B.k,s,B.e,s,s,s,s,s,s,0.05555555555555555*r,s,s,B.aJ,s,s,!0,s,s,s,s,s,s,s,s),B.el),B.J8,new A.tw("http://192.168.30.224:8000/ctrl/login/controler_123",4*r/5,s)],q),B.ay,B.dR,B.bR),s,s),A.km(A.a([A.jb(B.dA,B.i,s,p),A.fJ(s,s,0.007407407407407408*r),A.d5("Back",A.ck(s,s,B.i,s,s,s,s,s,s,s,s,p,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s)],q),B.dU,!1,!1,!0,new A.a3j(a))],q),B.c4)}}
 A.a3k.prototype={
 $1(a){var s,r,q,p,o=null
 if(J.e(J.b9(a,"type"),"login")){s=A.acY(a)

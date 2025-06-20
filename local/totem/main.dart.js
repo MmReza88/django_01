@@ -65075,7 +65075,7 @@ $0(){return A.br([this.a.c.$1("help")],t.z)},
 $S:0}
 A.Em.prototype={
 L(a){var s=null,r=t.w,q=A.b1(a,s,r).w.a.b,p=0.09259259259259259*q,o=t.E
-return A.f9(B.ar,A.a([A.fj(A.a([A.dN(B.bF,B.i,s,p),B.Me,A.bn("Back",s,s,s,A.b6(s,s,B.i,s,s,s,s,s,s,s,s,p,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],o),B.c8,!0,!1,!0,new A.WW(this)),A.fT(A.fV(A.a([A.bn("Please scan the QR code to log in:",s,s,s,A.b6(s,s,s,s,s,s,s,s,s,s,s,0.07777777777777778*q,s,s,B.aP,s,s,!0,s,s,s,s,s,s,s,s),B.bT,s),A.ci(s,0.037037037037037035*q,s),A.ajz("http://localhost:8000/auth/login/totem_321",A.b1(a,s,r).w.a.b/1.5)],o),B.P,B.bO,B.au),s,s)],o),B.K,B.av,s)}}
+return A.f9(B.ar,A.a([A.fj(A.a([A.dN(B.bF,B.i,s,p),B.Me,A.bn("Back",s,s,s,A.b6(s,s,B.i,s,s,s,s,s,s,s,s,p,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],o),B.c8,!0,!1,!0,new A.WW(this)),A.fT(A.fV(A.a([A.bn("Please scan the QR code to log in:",s,s,s,A.b6(s,s,s,s,s,s,s,s,s,s,s,0.07777777777777778*q,s,s,B.aP,s,s,!0,s,s,s,s,s,s,s,s),B.bT,s),A.ci(s,0.037037037037037035*q,s),A.ajz("http://192.168.30.224:8000/auth/login/totem_321",A.b1(a,s,r).w.a.b/1.5)],o),B.P,B.bO,B.au),s,s)],o),B.K,B.av,s)}}
 A.WW.prototype={
 $0(){return A.br([this.a.c.$1("home")],t.z)},
 $S:0}
@@ -65149,7 +65149,7 @@ $0(){return this.a.LP(0,"del")},
 $S:0}
 A.wv.prototype={
 ai(){var s=t.t
-return new A.zq(A.a([],s),A.a([],s),A.a([],t.s),A.asb(A.kM("ws://localhost:8000/ws/login/"),null))}}
+return new A.zq(A.a([],s),A.a([],s),A.a([],t.s),A.asb(A.kM("ws://192.168.30.224:8000/ws/login/"),null))}}
 A.zq.prototype={
 a_u(a){this.al(new A.ab2(this,a))},
 av(){var s,r,q,p=this,o=null
@@ -65306,7 +65306,7 @@ EP(a){var s=A.Sq(a*1000,0,!1)
 return A.aqS().jv(new A.cr(s,0,!1))},
 L(a){var s,r,q,p,o,n,m=this,l=null,k=t.w,j=A.b1(a,l,k).w.a.a,i=A.b1(a,l,k).w.a.b
 k=t.E
-s=A.fV(A.a([A.bn("Please scan the QR code to see your receipt:",l,l,l,A.b6(l,l,l,l,l,l,l,l,l,l,l,0.044444444444444446*i,l,l,B.aP,l,l,!0,l,l,l,l,l,l,l,l),B.bT,l),A.ci(l,0.018518518518518517*i,l),A.ajz("http://localhost:8000/api/ticket-view/"+m.r+"/",i/1.5)],k),B.P,B.a6,B.aU)
+s=A.fV(A.a([A.bn("Please scan the QR code to see your receipt:",l,l,l,A.b6(l,l,l,l,l,l,l,l,l,l,l,0.044444444444444446*i,l,l,B.aP,l,l,!0,l,l,l,l,l,l,l,l),B.bT,l),A.ci(l,0.018518518518518517*i,l),A.ajz("http://192.168.30.224:8000/api/ticket-view/"+m.r+"/",i/1.5)],k),B.P,B.a6,B.aU)
 r=A.ci(l,l,j*0.08)
 q=A.hH(16)
 p=A.a([new A.bp(0,B.x,B.as,new A.r(2,4),8)],t.V)
