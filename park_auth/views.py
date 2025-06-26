@@ -23,7 +23,7 @@ def register(request):
     else:
         form = RegistrationForm()
 
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'park_auth/register.html', {'form': form})
 
 @login_required
 def manage_cars(request):
@@ -44,7 +44,7 @@ def manage_cars(request):
             messages.success(request, "Car deleted.")
 
     user_cars = Car.objects.filter(user=user_dev)
-    return render(request, 'manage_cars.html', {'cars': user_cars})
+    return render(request, 'park_auth/manage_cars.html', {'cars': user_cars})
 
 def lin(request, client_id):    
     def send_uname():
@@ -74,10 +74,10 @@ def lin(request, client_id):
             messages.info(request, "Identifiant ou mdp incorrect")
     
     form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'park_auth/login.html', {'form': form})
 
 def success(request, client_id):
-    return render(request, 'success.html', {'c_id': client_id})
+    return render(request, 'park_auth/success.html', {'c_id': client_id})
 
 def lout(request, client_id):
     logout(request)

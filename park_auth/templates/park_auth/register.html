@@ -1,27 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>log in</title>
+    <title>Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'park_auth/style.css' %}">
 </head>
-
 <body>
     <div class="container">
-        <h1>Please log in</h1>
-        <p>Input your credential data</p>
+        <h1>Register</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="login">
+            <input type="submit" value="Register">
         </form>
-
-        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
-
     </div>
 </body>
-
 </html>

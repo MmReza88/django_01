@@ -40,10 +40,10 @@ def lin(request, client_id):
             messages.info(request, "Identifiant ou mdp incorrect")
     
     form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'control_admin/login.html', {'form': form})
 
 def success(request, client_id):
-    return render(request, 'success.html', {'c_id': client_id})
+    return render(request, 'control_admin/success.html', {'c_id': client_id})
 
 def lout(request, client_id):
     logout(request)
