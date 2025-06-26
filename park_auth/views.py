@@ -7,6 +7,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .forms import RegistrationForm
 from pages.models import Car, User_developed
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 
 
@@ -16,7 +17,8 @@ def register(request, client_id):
         if form.is_valid():
             user = form.save()
             codice_fiscale = form.cleaned_data.get('codice_fiscale')
-
+            group = Group.objects.get(name='Editors')
+            user.groups.add(group)
             User_developed.objects.create(user=user, codice_fiscale=codice_fiscale)
             messages.success(request, "Account created successfully. Please log in.")
             return redirect(reverse('login', args=[client_id]))
