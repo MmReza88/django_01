@@ -9,7 +9,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from park_auth.api_functions import get_user_for_badge
 
-# TODO: When an admin is logged in, propose to choose a controller to impersonnate, filter by Service Provider if he is a Custommer_Admin
 def lin(request, client_id):
     service_provider = "some_random_service_provider"
     def send_uname():
@@ -22,10 +21,15 @@ def lin(request, client_id):
                 "service_provider": service_provider
             }
         )
+
     
     if request.user.is_authenticated:
-        send_uname()
-        return redirect(reverse('success', args=[client_id]))
+        group = request.user.groups.first().name
+        if group == "Controller" or group == "Customer_admin":
+            send_uname()
+            return redirect(reverse('success', args=[client_id]))
+        else:
+            messages.info(request, "Only Controller and Admin are allowed to login here")
     
     if request.method == 'POST':
         username = request.POST["username"]
@@ -33,9 +37,13 @@ def lin(request, client_id):
         
         user = authenticate(request, username=username, password=password)
         if user:
-            login(request, user)
-            send_uname()
-            return redirect(reverse('success', args=[client_id]))
+            group = user.groups.first().name
+            if group == "Controller" or group == "Customer_admin":
+                login(request, user)
+                send_uname()
+                return redirect(reverse('success', args=[client_id]))
+            else:
+                messages.info(request, "Only Controller and Admin are allowed to login here")
         else:
             messages.info(request, "Identifiant ou mdp incorrect")
     
@@ -56,17 +64,16 @@ def badge(request, client_id, badge_id):
     username = badge_infos["username"]
     service_provider = badge_infos["service_provider"]
     
-    #TODO: Check for errors
-    
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        client_id,
-        {
-            "type": "send_login",
-            "username": username,
-            "service_provider": service_provider,
-        }
-    )
+    if badge_infos["type"] == "user_for_badge":
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            client_id,
+            {
+                "type": "send_login",
+                "username": username,
+                "service_provider": service_provider,
+            }
+        )
     
     
     return Response({"type": "status", "status": "success"})

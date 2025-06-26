@@ -218,6 +218,7 @@ def get_user_for_badge(badge_number):
             return {"type": "error", "error": "User not found for the given badge."}
         
         return {
+            "type": "user_for_badge",
             "username": user.username,
             "service_provider": badge.Service_provider.name if Badge.Service_provider else None,
         }
