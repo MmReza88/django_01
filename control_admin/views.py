@@ -27,7 +27,7 @@ def lin(request, client_id):
         group = request.user.groups.first().name
         if group == "Controller" or group == "Customer_admin":
             send_uname()
-            return redirect(reverse('success', args=[client_id]))
+            return redirect(reverse('success_c', args=[client_id]))
         else:
             messages.info(request, "Only Controller and Admin are allowed to login here")
     
@@ -41,7 +41,7 @@ def lin(request, client_id):
             if group == "Controller" or group == "Customer_admin":
                 login(request, user)
                 send_uname()
-                return redirect(reverse('success', args=[client_id]))
+                return redirect(reverse('success_c', args=[client_id]))
             else:
                 messages.info(request, "Only Controller and Admin are allowed to login here")
         else:
@@ -55,7 +55,7 @@ def success(request, client_id):
 
 def lout(request, client_id):
     logout(request)
-    return redirect(reverse('success', args=[client_id]))
+    return redirect(reverse('success_c', args=[client_id]))
 
 @api_view(['GET']) 
 def badge(request, client_id, badge_id):

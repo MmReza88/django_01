@@ -90,10 +90,9 @@
             <input type="text" name="plate_number" placeholder="Enter plate number" required>
             <input type="submit" name="add_car" value="Add Car">
         </form>
-        <form method="post" action="{% url 'logout' 'totem_321' %}" style="text-align: right;">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
+        <a href="{% url 'logout' c_id %}">Logout</a><br>
+        <a href="{% url 'login' 'c_id' %}">Login to website or Totem</a>
+
     </div>
 </body>
 

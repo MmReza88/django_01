@@ -10,7 +10,7 @@ from pages.models import Car, User_developed
 from django.contrib.auth.decorators import login_required
 
 
-def register(request):
+def register(request, client_id):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -19,14 +19,14 @@ def register(request):
 
             User_developed.objects.create(user=user, codice_fiscale=codice_fiscale)
             messages.success(request, "Account created successfully. Please log in.")
-            return redirect('manage_cars')
+            return redirect(reverse('login', args=[client_id]))
     else:
         form = RegistrationForm()
 
-    return render(request, 'park_auth/register.html', {'form': form})
+    return render(request, 'park_auth/register.html', {'form': form, 'c_id': client_id})
 
 @login_required
-def manage_cars(request):
+def manage_cars(request, client_id):
     user_dev = User_developed.objects.get(user=request.user)
 
     if request.method == 'POST':
@@ -44,7 +44,7 @@ def manage_cars(request):
             messages.success(request, "Car deleted.")
 
     user_cars = Car.objects.filter(user=user_dev)
-    return render(request, 'park_auth/manage_cars.html', {'cars': user_cars})
+    return render(request, 'park_auth/manage_cars.html', {'cars': user_cars, 'c_id': client_id})
 
 def lin(request, client_id):    
     def send_uname():
@@ -74,7 +74,7 @@ def lin(request, client_id):
             messages.info(request, "Identifiant ou mdp incorrect")
     
     form = AuthenticationForm()
-    return render(request, 'park_auth/login.html', {'form': form})
+    return render(request, 'park_auth/login.html', {'form': form, 'c_id': client_id})
 
 def success(request, client_id):
     return render(request, 'park_auth/success.html', {'c_id': client_id})

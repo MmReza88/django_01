@@ -11,7 +11,7 @@
         {% if user.is_authenticated %}
             <p>Login successful as {{ user.username }}</p>
             <a href="{% url 'logout' c_id %}">Logout</a><br>
-            <a href="{% url 'manage_cars' %}">Manage Your Cars</a>
+            <a href="{% url 'manage_cars' c_id %}">Manage Your Cars</a>
         {% else %}
             <p>You are not logged in</p>
             <a href="{% url 'login' c_id %}">Login</a>
