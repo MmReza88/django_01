@@ -11,7 +11,7 @@ while True:
     id, _ = reader.read()
 
     print(f"http://{server_ip}:{server_port}/ctrl/badge/{totem_id}/{id}/")
-    response = requests.get(f"http://{server_ip}:{server_port}/ctrl/badge/{totem_id}{id}/")
+    response = requests.get(f"http://{server_ip}:{server_port}/ctrl/badge/{totem_id}/{id}/")
     print(response.text)
     
     time.sleep(5)
