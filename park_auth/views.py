@@ -17,7 +17,7 @@ def register(request, client_id):
         if form.is_valid():
             user = form.save()
             codice_fiscale = form.cleaned_data.get('codice_fiscale')
-            group = Group.objects.get(name='Editors')
+            group = Group.objects.get(name='User')
             user.groups.add(group)
             User_developed.objects.create(user=user, codice_fiscale=codice_fiscale)
             messages.success(request, "Account created successfully. Please log in.")
