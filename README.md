@@ -1,5 +1,6 @@
 ### To run the server with all functionalities do
 ```
+venv\Scripts\activate
 python manage.py collectstatic
 daphne -b 0.0.0.0 -p 8000 config.asgi:application
 ```
